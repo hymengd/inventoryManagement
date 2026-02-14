@@ -34,8 +34,10 @@ public interface WarehouseMapper {
      */
     int deleteById(Integer warehouseId);
 
-    List<Integer> selectZonesByTemperature(@Param("warehouseId") Integer warehouseId,
-                                           @Param("minTemperature") BigDecimal minTemperature,
-                                           @Param("maxTemperature") BigDecimal maxTemperature);
+//    List<Integer> selectZonesByTemperature(@Param("warehouseId") Integer warehouseId,
+//                                           @Param("minTemperature") BigDecimal minTemperature,
+//                                           @Param("maxTemperature") BigDecimal maxTemperature);
+
+
 
 }

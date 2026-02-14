@@ -7,10 +7,12 @@ import com.seig.backend.mapper.WarehouseZoneMapper;
 import com.seig.backend.service.WarehouseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
+@Transactional
 public class WarehouseServiceImpl implements WarehouseService {
 
     @Autowired
@@ -56,4 +58,7 @@ public class WarehouseServiceImpl implements WarehouseService {
     public List<WarehouseZone> getWarehouseZonesByWarehouseId(Integer warehouseId) {
         return warehouseZoneMapper.selectByWarehouseId(warehouseId);
     }
+
+
+
 }

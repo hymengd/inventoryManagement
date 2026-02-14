@@ -35,7 +35,13 @@ public class Result<T> {
         result.setMessage("操作成功");
         return result;
     }
-    
+    /**
+     * 快速构建带数据的成功响应
+     */
+    public static <T> Result<T> ok(T data) {
+        return success("操作成功", data);
+    }
+
     /**
      * 成功响应（带消息，无数据）
      */

@@ -42,4 +42,6 @@ public interface WarehouseContainerMapper {
                                      @Param("isRefrigerated") boolean isRefrigerated,
                                      @Param("isNarcoticSafe") boolean isNarcoticSafe);
 
+
+
 }

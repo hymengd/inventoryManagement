@@ -105,4 +105,18 @@ public class MedicinesController {
                 ? Result.success("更新成功")           // 返回：{code: 200, message: "更新成功"}
                 : Result.error("更新失败，药品不存在");  // 返回：{code: 500, message: "更新失败，药品不存在"}
     }
+    @PostMapping("/update") //替代"/updateMedicinesById"
+    public Result<Void> updateMedicine(@RequestBody MedicinesDto dto) {
+        try {
+            Medicines medicine = new Medicines();
+            BeanUtils.copyProperties(dto, medicine); // 将 DTO 转换为实体类
+            int rows = medicinesService.updateMedicine(medicine);
+            return rows > 0
+                    ? Result.success("更新成功")
+                    : Result.error("更新失败，药品不存在");
+        } catch (Exception e) {
+            return Result.error("更新异常：" + e.getMessage());
+        }
+    }
+
 }

@@ -38,8 +38,7 @@ public interface StorageLocationMapper {
      */
     int deleteById(Integer locationId);
 
-//    List<Integer> selectFreeLocations(@Param("containerIds") List<Integer> containerIds);
-
+//    已用
     List<Integer> selectEmptyLocations(@Param("containerIds") List<Integer> containerIds);
 
 

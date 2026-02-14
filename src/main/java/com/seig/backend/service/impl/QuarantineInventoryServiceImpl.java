@@ -71,7 +71,7 @@ public class QuarantineInventoryServiceImpl implements QuarantineInventoryServic
 
         // 3. 查找符合条件的 warehouse_container
         List<Integer> containerIds = warehouseContainerMapper.selectByConditions(
-                zoneIds, medicineSku.getIsRefrigerated() == 1, medicineSku.getIsNarcoticSafe() == 1);
+                zoneIds, medicineSku.getRefrigerated(), medicineSku.getSpecialDrug());
 
         // 4. 查找空闲的 storage_location
         List<Integer> locationIds = storageLocationMapper.selectEmptyLocations(containerIds);
@@ -87,8 +87,8 @@ public class QuarantineInventoryServiceImpl implements QuarantineInventoryServic
             inventory.setLocationId(locationId);
             inventory.setQuantity(BigDecimal.valueOf(assignQuantity));
             inventory.setSkuId(skuId);
-            inventory.setTemperatureZone(medicineSku.getTemperatureZone());
-            inventory.setHumidityCondition(medicineSku.getHumidityCondition());
+//            inventory.setTemperatureZone(medicineSku.getTemperatureZone());
+//            inventory.setHumidityCondition(medicineSku.getHumidityCondition());
             inventoryList.add(inventory);
 
             remainingQuantity -= assignQuantity;

@@ -24,6 +24,9 @@
         <result column="remark" jdbcType="VARCHAR" property="remark"/>
         <result column="created_time" jdbcType="TIMESTAMP" property="createdTime"/>
         <result column="updated_time" jdbcType="TIMESTAMP" property="updatedTime"/>
+        <result column="temperature_min" jdbcType="DECIMAL" property="temperatureMin"/>
+        <result column="temperature_max" jdbcType="DECIMAL" property="temperatureMax"/>
+
     </resultMap>
 
     <sql id="Base_Column_List">
@@ -133,13 +136,13 @@
         WHERE zone_id = #{zoneId}
     </delete>
 
-<!--    仓库的温度不能低于药物温度，不能高于药物温度-->
+<!--    仓库的温度不能低于药物温度，不能高于药物温度--><!-- 仓库高温 <= 8°C --><!-- 仓库低温 >= 2°C -->
     <select id="selectByTemperatureRange" resultType="int">
         SELECT zone_id
-        FROM warehouse_zones
+        FROM warehouse_zone
         WHERE warehouse_id = #{warehouseId}
-        AND min_temperature &gt;= #{minTemperature}   <!-- 仓库低温 >= 2°C -->
-        AND max_temperature &lt;= #{maxTemperature}   <!-- 仓库高温 <= 8°C -->
+        AND min_temperature &gt;= #{minTemperature}
+        AND max_temperature &lt;= #{maxTemperature}
     </select>
 
 </mapper>
