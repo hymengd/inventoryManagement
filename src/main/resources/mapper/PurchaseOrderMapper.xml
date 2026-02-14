@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.seig.backend.mapper.PurchaseOrderMapper">
+
+    <!-- 订单基础结果映射 -->
+    <resultMap id="BaseOrderResultMap" type="com.seig.backend.entity.record.PurchaseOrder">
+        <id column="order_id" jdbcType="BIGINT" property="orderId"/>
+        <result column="order_no" jdbcType="VARCHAR" property="orderNo"/>
+        <result column="supplier_id" jdbcType="INTEGER" property="supplierId"/>
+        <result column="supplier_name" jdbcType="VARCHAR" property="supplierName"/>
+        <result column="purchase_date" jdbcType="DATE" property="purchaseDate"/>
+        <result column="expected_arrival_date" jdbcType="DATE" property="expectedArrivalDate"/>
+        <result column="actual_arrival_date" jdbcType="DATE" property="actualArrivalDate"/>
+        <result column="purchase_type" jdbcType="TINYINT" property="purchaseType"/>
+        <result column="total_amount" jdbcType="DECIMAL" property="totalAmount"/>
+        <result column="discount_amount" jdbcType="DECIMAL" property="discountAmount"/>
+        <result column="payable_amount" jdbcType="DECIMAL" property="payableAmount"/>
+        <result column="paid_amount" jdbcType="DECIMAL" property="paidAmount"/>
+        <result column="payment_status" jdbcType="TINYINT" property="paymentStatus"/>
+        <result column="status" jdbcType="TINYINT" property="status"/>
+        <result column="buyer_id" jdbcType="INTEGER" property="buyerId"/>
+        <result column="buyer_name" jdbcType="VARCHAR" property="buyerName"/>
+        <result column="auditor_id" jdbcType="INTEGER" property="auditorId"/>
+        <result column="audit_time" jdbcType="TIMESTAMP" property="auditTime"/>
+        <result column="inspector_id" jdbcType="INTEGER" property="inspectorId"/>
+        <result column="inspector2_id" jdbcType="INTEGER" property="inspector2Id"/>
+        <result column="is_cold_chain" jdbcType="TINYINT" property="isColdChain"/>
+        <result column="cold_chain_requirement" jdbcType="VARCHAR" property="coldChainRequirement"/>
+        <result column="remarks" jdbcType="VARCHAR" property="remarks"/>
+        <result column="cancel_reason" jdbcType="VARCHAR" property="cancelReason"/>
+        <result column="created_at" jdbcType="TIMESTAMP" property="createdAt"/>
+        <result column="updated_at" jdbcType="TIMESTAMP" property="updatedAt"/>
+        <result column="created_by" jdbcType="INTEGER" property="createdBy"/>
+        <result column="updated_by" jdbcType="INTEGER" property="updatedBy"/>
+    </resultMap>
+
+    <!-- 订单项结果映射 -->
+    <resultMap id="BaseItemResultMap" type="com.seig.backend.entity.record.PurchaseOrderItem">
+        <id column="item_id" jdbcType="BIGINT" property="itemId"/>
+        <result column="order_id" jdbcType="BIGINT" property="orderId"/>
+        <result column="drug_id" jdbcType="BIGINT" property="drugId"/>
+        <result column="drug_name" jdbcType="VARCHAR" property="drugName"/>
+        <result column="drug_code" jdbcType="VARCHAR" property="drugCode"/>
+        <result column="specification" jdbcType="VARCHAR" property="specification"/>
+        <result column="dosage_form" jdbcType="VARCHAR" property="dosageForm"/>
+        <result column="manufacturer" jdbcType="VARCHAR" property="manufacturer"/>
+        <result column="approval_no" jdbcType="VARCHAR" property="approvalNo"/>
+        <result column="purchase_quantity" jdbcType="INTEGER" property="purchaseQuantity"/>
+        <result column="unit" jdbcType="VARCHAR" property="unit"/>
+        <result column="unit_price" jdbcType="DECIMAL" property="unitPrice"/>
+        <result column="amount" jdbcType="DECIMAL" property="amount"/>
+        <result column="batch_no" jdbcType="VARCHAR" property="batchNo"/>
+        <result column="production_date" jdbcType="DATE" property="productionDate"/>
+        <result column="expiry_date" jdbcType="DATE" property="expiryDate"/>
+        <result column="shelf_life_months" jdbcType="INTEGER" property="shelfLifeMonths"/>
+        <result column="warehouse_id" jdbcType="INTEGER" property="warehouseId"/>
+        <result column="location_no" jdbcType="VARCHAR" property="locationNo"/>
+        <result column="received_quantity" jdbcType="INTEGER" property="receivedQuantity"/>
+        <result column="qualified_quantity" jdbcType="INTEGER" property="qualifiedQuantity"/>
+        <result column="unqualified_quantity" jdbcType="INTEGER" property="unqualifiedQuantity"/>
+        <result column="unqualified_reason" jdbcType="VARCHAR" property="unqualifiedReason"/>
+        <result column="is_cold_chain" jdbcType="TINYINT" property="isColdChain"/>
+        <result column="storage_condition" jdbcType="VARCHAR" property="storageCondition"/>
+        <result column="temperature_record" jdbcType="VARCHAR" property="temperatureRecord"/>
+        <result column="quality_status" jdbcType="TINYINT" property="qualityStatus"/>
+        <result column="remarks" jdbcType="VARCHAR" property="remarks"/>
+        <result column="created_at" jdbcType="TIMESTAMP" property="createdAt"/>
+        <result column="updated_at" jdbcType="TIMESTAMP" property="updatedAt"/>
+        <result column="sku_id" jdbcType="INTEGER" property="skuId"/>
+    </resultMap>
+
+    <!-- 订单详情结果映射 -->
+    <resultMap id="OrderDetailResultMap" type="com.seig.backend.pojo.dto.PurchaseOrderDetailDto">
+        <association property="order" resultMap="BaseOrderResultMap"/>
+        <collection property="items" ofType="com.seig.backend.entity.record.PurchaseOrderItem">
+            <id column="item_id" jdbcType="BIGINT" property="itemId"/>
+            <result column="order_id" jdbcType="BIGINT" property="orderId"/>
+            <result column="sku_id" jdbcType="INTEGER" property="skuId"/>
+            <result column="drug_id" jdbcType="BIGINT" property="drugId"/>
+            <result column="drug_name" jdbcType="VARCHAR" property="drugName"/>
+            <result column="drug_code" jdbcType="VARCHAR" property="drugCode"/>
+            <result column="specification" jdbcType="VARCHAR" property="specification"/>
+            <result column="dosage_form" jdbcType="VARCHAR" property="dosageForm"/>
+            <result column="manufacturer" jdbcType="VARCHAR" property="manufacturer"/>
+            <result column="approval_no" jdbcType="VARCHAR" property="approvalNo"/>
+            <result column="purchase_quantity" jdbcType="INTEGER" property="purchaseQuantity"/>
+            <result column="unit" jdbcType="VARCHAR" property="unit"/>
+            <result column="unit_price" jdbcType="DECIMAL" property="unitPrice"/>
+            <result column="amount" jdbcType="DECIMAL" property="amount"/>
+            <result column="batch_no" jdbcType="VARCHAR" property="batchNo"/>
+            <result column="production_date" jdbcType="DATE" property="productionDate"/>
+            <result column="expiry_date" jdbcType="DATE" property="expiryDate"/>
+            <result column="shelf_life_months" jdbcType="INTEGER" property="shelfLifeMonths"/>
+            <result column="warehouse_id" jdbcType="INTEGER" property="warehouseId"/>
+            <result column="location_no" jdbcType="VARCHAR" property="locationNo"/>
+            <result column="received_quantity" jdbcType="INTEGER" property="receivedQuantity"/>
+            <result column="qualified_quantity" jdbcType="INTEGER" property="qualifiedQuantity"/>
+            <result column="unqualified_quantity" jdbcType="INTEGER" property="unqualifiedQuantity"/>
+            <result column="unqualified_reason" jdbcType="VARCHAR" property="unqualifiedReason"/>
+            <result column="is_cold_chain" jdbcType="TINYINT" property="isColdChain"/>
+            <result column="storage_condition" jdbcType="VARCHAR" property="storageCondition"/>
+            <result column="temperature_record" jdbcType="VARCHAR" property="temperatureRecord"/>
+            <result column="quality_status" jdbcType="TINYINT" property="qualityStatus"/>
+            <result column="remarks" jdbcType="VARCHAR" property="remarks"/>
+            <result column="created_at" jdbcType="TIMESTAMP" property="createdAt"/>
+            <result column="updated_at" jdbcType="TIMESTAMP" property="updatedAt"/>
+        </collection>
+    </resultMap>
+
+    <!-- 订单基础列 -->
+    <sql id="Base_Order_Column_List">
+        order_id, order_no, supplier_id, supplier_name, purchase_date, expected_arrival_date,
+        actual_arrival_date, purchase_type, total_amount, discount_amount, payable_amount,
+        paid_amount, payment_status, status, buyer_id, buyer_name, auditor_id, audit_time,
+        inspector_id, inspector2_id, is_cold_chain, cold_chain_requirement, remarks, cancel_reason,
+        created_at, updated_at, created_by, updated_by
+    </sql>
+
+    <!-- 订单项基础列 -->
+    <sql id="Base_Item_Column_List">
+        item_id, order_id, drug_id, drug_name, drug_code, specification, dosage_form,
+    manufacturer, approval_no, purchase_quantity, unit, unit_price, amount, batch_no,
+    production_date, expiry_date, shelf_life_months, warehouse_id, location_no,
+    received_quantity, qualified_quantity, unqualified_quantity, unqualified_reason,
+    is_cold_chain, storage_condition, temperature_record, quality_status, remarks,
+    created_at, updated_at, sku_id
+    </sql>
+
+
+    <!-- 根据订单ID查询订单基本信息 -->
+    <select id="selectOrderById" resultMap="BaseOrderResultMap">
+        SELECT
+        <include refid="Base_Order_Column_List"/>
+        FROM purchase_orders
+        WHERE order_id = #{orderId}
+    </select>
+
+    <!-- 根据订单ID查询订单项列表 -->
+    <select id="selectItemsByOrderId" resultMap="BaseItemResultMap">
+        SELECT
+        <include refid="Base_Item_Column_List"/>
+        FROM purchase_order_items
+        WHERE order_id = #{orderId}
+        ORDER BY item_id
+    </select>
+
+    <!-- 查询所有订单基本信息 -->
+    <select id="selectAllOrders" resultMap="BaseOrderResultMap">
+        SELECT
+        <include refid="Base_Order_Column_List"/>
+        FROM purchase_orders
+        ORDER BY created_at DESC
+    </select>
+
+    <!-- 查询所有订单详情（包含订单项） -->
+    <select id="selectAllOrdersWithItems" resultMap="OrderDetailResultMap">
+        SELECT
+            o.order_id, o.order_no, o.supplier_id, o.supplier_name, o.purchase_date, o.expected_arrival_date,
+            o.actual_arrival_date, o.purchase_type, o.total_amount, o.discount_amount, o.payable_amount,
+            o.paid_amount, o.payment_status, o.status, o.buyer_id, o.buyer_name, o.auditor_id, o.audit_time,
+            o.inspector_id, o.inspector2_id, o.is_cold_chain, o.cold_chain_requirement, o.remarks, o.cancel_reason,
+            o.created_at as order_created_at, o.updated_at as order_updated_at, o.created_by, o.updated_by,
+            i.item_id, i.order_id, i.drug_id, i.drug_name, i.drug_code, i.specification, i.dosage_form,
+            i.manufacturer, i.approval_no, i.purchase_quantity, i.unit, i.unit_price, i.amount, i.batch_no,
+            i.production_date, i.expiry_date, i.shelf_life_months, i.warehouse_id, i.location_no,
+            i.received_quantity, i.qualified_quantity, i.unqualified_quantity, i.unqualified_reason,
+            i.is_cold_chain, i.storage_condition, i.temperature_record, i.quality_status, i.remarks,
+            i.created_at as item_created_at, i.updated_at as item_updated_at
+        FROM purchase_orders o
+                 LEFT JOIN purchase_order_items i ON o.order_id = i.order_id
+        ORDER BY o.order_id DESC, i.item_id
+    </select>
+
+    <!-- 根据订单ID删除订单项 -->
+    <delete id="deleteItemsByOrderId" parameterType="java.lang.Long">
+        DELETE FROM purchase_order_items
+        WHERE order_id = #{orderId}
+    </delete>
+
+    <!-- 根据订单ID删除订单 -->
+    <delete id="deleteOrderById" parameterType="java.lang.Long">
+        DELETE FROM purchase_orders
+        WHERE order_id = #{orderId}
+    </delete>
+
+    <insert id="insertOrder" parameterType="com.seig.backend.entity.record.PurchaseOrder" useGeneratedKeys="true" keyProperty="orderId">
+        INSERT INTO purchase_orders (
+        <include refid="Base_Order_Column_List"/>
+        ) VALUES (
+        #{orderId}, #{orderNo}, #{supplierId}, #{supplierName}, #{purchaseDate}, #{expectedArrivalDate},
+        #{actualArrivalDate}, #{purchaseType}, #{totalAmount}, #{discountAmount}, #{payableAmount},
+        #{paidAmount}, #{paymentStatus}, #{status}, #{buyerId}, #{buyerName}, #{auditorId}, #{auditTime},
+        #{inspectorId}, #{inspector2Id}, #{isColdChain}, #{coldChainRequirement}, #{remarks},
+        #{cancelReason}, #{createdAt}, #{updatedAt}, #{createdBy}, #{updatedBy}
+        )
+    </insert>
+
+    <insert id="insertOrderItem" parameterType="com.seig.backend.entity.record.PurchaseOrderItem" useGeneratedKeys="true" keyProperty="itemId">
+        INSERT INTO purchase_order_items (
+        <include refid="Base_Item_Column_List"/>
+        ) VALUES (
+        #{itemId}, #{orderId}, #{drugId}, #{drugName}, #{drugCode}, #{specification}, #{dosageForm},
+        #{manufacturer}, #{approvalNo}, #{purchaseQuantity}, #{unit}, #{unitPrice}, #{amount}, #{batchNo},
+        #{productionDate}, #{expiryDate}, #{shelfLifeMonths}, #{warehouseId}, #{locationNo},
+        #{receivedQuantity}, #{qualifiedQuantity}, #{unqualifiedQuantity}, #{unqualifiedReason},
+        #{isColdChain}, #{storageCondition}, #{temperatureRecord}, #{qualityStatus}, #{remarks},
+        #{createdAt}, #{updatedAt}, #{skuId}
+        )
+    </insert>
+
+    <update id="updateOrderStatus" parameterType="com.seig.backend.entity.record.PurchaseOrder">
+        UPDATE purchase_orders
+        SET status = #{status,jdbcType=TINYINT},
+            updated_at = #{updatedAt,jdbcType=TIMESTAMP}
+        WHERE order_id = #{orderId,jdbcType=BIGINT}
+    </update>
+
+</mapper>

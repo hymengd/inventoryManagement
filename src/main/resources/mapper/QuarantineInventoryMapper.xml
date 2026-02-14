@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.seig.backend.mapper.QuarantineInventoryMapper">
+
+    <!-- 结果映射 -->
+    <resultMap id="BaseResultMap" type="com.seig.backend.entity.storage.QuarantineInventory">
+        <id column="detail_id" property="detailId"/>
+        <result column="quarantine_id" property="quarantineId"/>
+        <result column="location_id" property="locationId"/>
+        <result column="quantity" property="quantity"/>
+        <result column="temperature_zone" property="temperatureZone"/>
+        <result column="humidity_condition" property="humidityCondition"/>
+        <result column="sku_id" property="skuId"/>
+<!--        <result column="batch_id" property="batchId"/>-->
+        <result column="created_at" property="createdAt"/>
+        <result column="updated_at" property="updatedAt"/>
+    </resultMap>
+
+    <!-- 插入待验库存明细 -->
+    <insert id="insert" parameterType="com.seig.backend.entity.storage.QuarantineInventory" useGeneratedKeys="true" keyProperty="detailId">
+        INSERT INTO quarantine_inventory (
+            quarantine_id, location_id, quantity, temperature_zone, humidity_condition,
+            created_at, updated_at
+        ) VALUES (
+                     #{quarantineId}, #{locationId}, #{quantity}, #{temperatureZone}, #{humidityCondition},
+                     NOW(), NOW()
+                 )
+    </insert>
+
+    <insert id="batchInsert" parameterType="java.util.List">
+        INSERT INTO quarantine_inventory (
+        quarantine_id, location_id, quantity, temperature_zone, humidity_condition, sku_id,
+        created_at, updated_at
+        ) VALUES
+        <foreach collection="list" item="item" separator=",">
+            (
+            #{item.quarantineId}, #{item.locationId}, #{item.quantity}, #{item.temperatureZone},
+            #{item.humidityCondition}, #{item.skuId}, NOW(), NOW()
+            )
+        </foreach>
+    </insert>
+    <!-- 根据ID查询待验库存明细 -->
+    <select id="selectById" parameterType="int" resultMap="BaseResultMap">
+        SELECT * FROM quarantine_inventory WHERE detail_id = #{detailId}
+    </select>
+
+    <!-- 根据待验批次ID查询明细列表 -->
+    <select id="selectByQuarantineId" parameterType="int" resultMap="BaseResultMap">
+        SELECT * FROM quarantine_inventory WHERE quarantine_id = #{quarantineId}
+    </select>
+
+    <!-- 查询所有待验库存明细 -->
+    <select id="selectAll" resultMap="BaseResultMap">
+        SELECT * FROM quarantine_inventory
+    </select>
+
+    <!-- 更新待验库存明细 -->
+    <update id="update" parameterType="com.seig.backend.entity.storage.QuarantineInventory">
+        UPDATE quarantine_inventory
+        SET
+            location_id = #{locationId},
+            quantity = #{quantity},
+            temperature_zone = #{temperatureZone},
+            humidity_condition = #{humidityCondition},
+            updated_at = NOW()
+        WHERE detail_id = #{detailId}
+    </update>
+
+    <!-- 删除待验库存明细 -->
+    <delete id="deleteById" parameterType="int">
+        DELETE FROM quarantine_inventory WHERE detail_id = #{detailId}
+    </delete>
+</mapper>

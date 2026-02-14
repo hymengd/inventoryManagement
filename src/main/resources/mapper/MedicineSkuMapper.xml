@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.seig.backend.mapper.MedicineSkuMapper">
+
+    <resultMap id="BaseResultMap" type="com.seig.backend.entity.MedicineSku">
+        <id column="sku_id" jdbcType="INTEGER" property="skuId"/>
+        <result column="sku_code" jdbcType="VARCHAR" property="skuCode"/>
+        <result column="medicine_id" jdbcType="INTEGER" property="medicineId"/>
+        <result column="supplier_id" jdbcType="INTEGER" property="supplierId"/>
+        <result column="manufacturer_id" jdbcType="INTEGER" property="manufacturerId"/>
+        <result column="is_direct_from_manufacturer" jdbcType="TINYINT" property="isDirectFromManufacturer"/>
+        <result column="brand_name" jdbcType="VARCHAR" property="brandName"/>
+        <result column="specification_detail" jdbcType="VARCHAR" property="specificationDetail"/>
+        <result column="packaging" jdbcType="VARCHAR" property="packaging"/>
+        <result column="barcode" jdbcType="VARCHAR" property="barcode"/>
+        <result column="approval_number" jdbcType="VARCHAR" property="approvalNumber"/>
+        <result column="origin_country" jdbcType="VARCHAR" property="originCountry"/>
+        <result column="purchase_price" jdbcType="DECIMAL" property="purchasePrice"/>
+        <result column="wholesale_price" jdbcType="DECIMAL" property="wholesalePrice"/>
+        <result column="retail_price" jdbcType="DECIMAL" property="retailPrice"/>
+        <result column="insurance_price" jdbcType="DECIMAL" property="insurancePrice"/>
+        <result column="is_bid_winner" jdbcType="TINYINT" property="isBidWinner"/>
+        <result column="bid_number" jdbcType="VARCHAR" property="bidNumber"/>
+        <result column="is_preferred" jdbcType="TINYINT" property="isPreferred"/>
+        <result column="priority_level" jdbcType="TINYINT" property="priorityLevel"/>
+        <result column="min_purchase_quantity" jdbcType="INTEGER" property="minPurchaseQuantity"/>
+        <result column="purchase_unit" jdbcType="VARCHAR" property="purchaseUnit"/>
+        <result column="conversion_to_min" jdbcType="INTEGER" property="conversionToMin"/>
+        <result column="quality_level" jdbcType="VARCHAR" property="qualityLevel"/>
+        <result column="validity_period_months" jdbcType="INTEGER" property="validityPeriodMonths"/>
+        <result column="storage_condition_detail" jdbcType="VARCHAR" property="storageConditionDetail"/>
+        <result column="is_special_drug" jdbcType="TINYINT" property="isSpecialDrug"/>
+        <result column="is_refrigerated" jdbcType="TINYINT" property="isRefrigerated"/>
+        <result column="is_light_sensitive" jdbcType="TINYINT" property="isLightSensitive"/>
+        <result column="is_moisture_sensitive" jdbcType="TINYINT" property="isMoistureSensitive"/>
+        <result column="safety_stock" jdbcType="INTEGER" property="safetyStock"/>
+        <result column="reorder_point" jdbcType="INTEGER" property="reorderPoint"/>
+        <result column="avg_monthly_sales" jdbcType="INTEGER" property="avgMonthlySales"/>
+        <result column="last_purchase_date" jdbcType="DATE" property="lastPurchaseDate"/>
+        <result column="last_sale_date" jdbcType="DATE" property="lastSaleDate"/>
+        <result column="remark" jdbcType="LONGVARCHAR" property="remark"/>
+        <result column="status" jdbcType="TINYINT" property="status"/>
+        <result column="created_at" jdbcType="TIMESTAMP" property="createdAt"/>
+        <result column="updated_at" jdbcType="TIMESTAMP" property="updatedAt"/>
+        <result column="created_by" jdbcType="INTEGER" property="createdBy"/>
+        <result column="updated_by" jdbcType="INTEGER" property="updatedBy"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        sku_id, sku_code, medicine_id, supplier_id, manufacturer_id,
+        is_direct_from_manufacturer, brand_name, specification_detail, packaging, barcode,
+        approval_number, origin_country, purchase_price, wholesale_price, retail_price,
+        insurance_price, is_bid_winner, bid_number, is_preferred, priority_level,
+        min_purchase_quantity, purchase_unit, conversion_to_min, quality_level,
+        validity_period_months, storage_condition_detail, is_special_drug,
+        is_refrigerated, is_light_sensitive, is_moisture_sensitive, safety_stock,
+        reorder_point, avg_monthly_sales, last_purchase_date, last_sale_date, remark,
+        status, created_at, updated_at, created_by, updated_by
+    </sql>
+
+    <insert id="insert" parameterType="com.seig.backend.entity.MedicineSku" useGeneratedKeys="true" keyProperty="skuId">
+        INSERT INTO medicine_skus (
+        <include refid="Base_Column_List"/>
+        ) VALUES (
+        #{skuCode}, #{medicineId}, #{supplierId}, #{manufacturerId},
+        #{isDirectFromManufacturer}, #{brandName}, #{specificationDetail}, #{packaging}, #{barcode},
+        #{approvalNumber}, #{originCountry}, #{purchasePrice}, #{wholesalePrice}, #{retailPrice},
+        #{insurancePrice}, #{isBidWinner}, #{bidNumber}, #{isPreferred}, #{priorityLevel},
+        #{minPurchaseQuantity}, #{purchaseUnit}, #{conversionToMin}, #{qualityLevel},
+        #{validityPeriodMonths}, #{storageConditionDetail}, #{isSpecialDrug},
+        #{isRefrigerated}, #{isLightSensitive}, #{isMoistureSensitive}, #{safetyStock},
+        #{reorderPoint}, #{avgMonthlySales}, #{lastPurchaseDate}, #{lastSaleDate}, #{remark},
+        #{status}, NOW(), NOW(), #{createdBy}, #{updatedBy}
+        )
+    </insert>
+
+    <select id="selectById" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM medicine_skus
+        WHERE sku_id = #{skuId}
+    </select>
+
+    <select id="selectAll" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM medicine_skus
+        ORDER BY sku_id DESC
+    </select>
+
+    <select id="selectByMedicineId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM medicine_skus
+        WHERE medicine_id = #{medicineId}
+        ORDER BY sku_id DESC
+    </select>
+
+    <update id="update" parameterType="com.seig.backend.entity.MedicineSku">
+        UPDATE medicine_skus
+        <set>
+            <if test="skuCode != null">sku_code = #{skuCode},</if>
+            <if test="medicineId != null">medicine_id = #{medicineId},</if>
+            <if test="supplierId != null">supplier_id = #{supplierId},</if>
+            <if test="manufacturerId != null">manufacturer_id = #{manufacturerId},</if>
+            <if test="brandName != null">brand_name = #{brandName},</if>
+            <if test="specificationDetail != null">specification_detail = #{specificationDetail},</if>
+            <if test="packaging != null">packaging = #{packaging},</if>
+            <if test="barcode != null">barcode = #{barcode},</if>
+            <if test="approvalNumber != null">approval_number = #{approvalNumber},</if>
+            <if test="originCountry != null">origin_country = #{originCountry},</if>
+            <if test="purchasePrice != null">purchase_price = #{purchasePrice},</if>
+            <if test="wholesalePrice != null">wholesale_price = #{wholesalePrice},</if>
+            <if test="retailPrice != null">retail_price = #{retailPrice},</if>
+            <if test="insurancePrice != null">insurance_price = #{insurancePrice},</if>
+            <if test="isBidWinner != null">is_bid_winner = #{isBidWinner},</if>
+            <if test="bidNumber != null">bid_number = #{bidNumber},</if>
+            <if test="isPreferred != null">is_preferred = #{isPreferred},</if>
+            <if test="priorityLevel != null">priority_level = #{priorityLevel},</if>
+            <if test="minPurchaseQuantity != null">min_purchase_quantity = #{minPurchaseQuantity},</if>
+            <if test="purchaseUnit != null">purchase_unit = #{purchaseUnit},</if>
+            <if test="conversionToMin != null">conversion_to_min = #{conversionToMin},</if>
+            <if test="qualityLevel != null">quality_level = #{qualityLevel},</if>
+            <if test="validityPeriodMonths != null">validity_period_months = #{validityPeriodMonths},</if>
+            <if test="storageConditionDetail != null">storage_condition_detail = #{storageConditionDetail},</if>
+            <if test="isSpecialDrug != null">is_special_drug = #{isSpecialDrug},</if>
+            <if test="isRefrigerated != null">is_refrigerated = #{isRefrigerated},</if>
+            <if test="isLightSensitive != null">is_light_sensitive = #{isLightSensitive},</if>
+            <if test="isMoistureSensitive != null">is_moisture_sensitive = #{isMoistureSensitive},</if>
+            <if test="safetyStock != null">safety_stock = #{safetyStock},</if>
+            <if test="reorderPoint != null">reorder_point = #{reorderPoint},</if>
+            <if test="avgMonthlySales != null">avg_monthly_sales = #{avgMonthlySales},</if>
+            <if test="lastPurchaseDate != null">last_purchase_date = #{lastPurchaseDate},</if>
+            <if test="lastSaleDate != null">last_sale_date = #{lastSaleDate},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="updatedBy != null">updated_by = #{updatedBy},</if>
+            updated_at = NOW()
+        </set>
+        WHERE sku_id = #{skuId}
+    </update>
+
+    <delete id="deleteById" parameterType="java.lang.Integer">
+        DELETE FROM medicine_skus
+        WHERE sku_id = #{skuId}
+    </delete>
+    <select id="selectBySupplierId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM medicine_skus
+        WHERE supplier_id = #{supplierId}
+        ORDER BY sku_id DESC
+    </select>
+
+</mapper>

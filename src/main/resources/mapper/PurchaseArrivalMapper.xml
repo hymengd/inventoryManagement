@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.seig.backend.mapper.PurchaseArrivalMapper">
+
+    <resultMap id="BaseResultMap" type="com.seig.backend.entity.record.PurchaseArrival">
+        <id column="arrival_id" jdbcType="INTEGER" property="arrivalId"/>
+        <result column="po_id" jdbcType="INTEGER" property="poId"/>
+        <result column="sku_id" jdbcType="INTEGER" property="skuId"/>
+        <result column="batch_no" jdbcType="VARCHAR" property="batchNo"/>
+        <result column="arrival_qty" jdbcType="INTEGER" property="arrivalQty"/>
+        <result column="arrival_date" jdbcType="DATE" property="arrivalDate"/>
+        <result column="location_temp" jdbcType="VARCHAR" property="locationTemp"/>
+        <result column="status" jdbcType="VARCHAR" property="status"/>
+        <result column="inspector_id" jdbcType="VARCHAR" property="inspectorId"/>
+        <result column="inspect_date" jdbcType="DATE" property="inspectDate"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        arrival_id, po_id, sku_id, batch_no, arrival_qty,
+        arrival_date, location_temp, status, inspector_id, inspect_date
+    </sql>
+
+    <insert id="insert" parameterType="com.seig.backend.entity.record.PurchaseArrival" useGeneratedKeys="true" keyProperty="arrivalId">
+        INSERT INTO purchase_arrivals (
+            po_id, sku_id, batch_no, arrival_qty,
+            arrival_date, location_temp, status, inspector_id, inspect_date
+        ) VALUES (
+            #{poId,jdbcType=INTEGER},
+            #{skuId,jdbcType=INTEGER},
+            #{batchNo,jdbcType=VARCHAR},
+            #{arrivalQty,jdbcType=INTEGER},
+            #{arrivalDate,jdbcType=DATE},
+            #{locationTemp,jdbcType=VARCHAR},
+            #{status,jdbcType=VARCHAR},
+            #{inspectorId,jdbcType=VARCHAR},
+            #{inspectDate,jdbcType=DATE}
+        )
+    </insert>
+
+    <select id="selectByArrivalId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM purchase_arrivals
+        WHERE arrival_id = #{arrivalId,jdbcType=INTEGER}
+    </select>
+
+    <select id="selectAllPurchaseArrivals" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM purchase_arrivals
+        ORDER BY arrival_id DESC
+    </select>
+
+    <select id="selectByPoId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM purchase_arrivals
+        WHERE po_id = #{poId,jdbcType=INTEGER}
+        ORDER BY arrival_id DESC
+    </select>
+
+    <select id="selectBySkuId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM purchase_arrivals
+        WHERE sku_id = #{skuId,jdbcType=INTEGER}
+        ORDER BY arrival_id DESC
+    </select>
+
+    <update id="updatePurchaseArrival" parameterType="com.seig.backend.entity.record.PurchaseArrival">
+        UPDATE purchase_arrivals
+        SET po_id = #{poId,jdbcType=INTEGER},
+            sku_id = #{skuId,jdbcType=INTEGER},
+            batch_no = #{batchNo,jdbcType=VARCHAR},
+            arrival_qty = #{arrivalQty,jdbcType=INTEGER},
+            arrival_date = #{arrivalDate,jdbcType=DATE},
+            location_temp = #{locationTemp,jdbcType=VARCHAR},
+            status = #{status,jdbcType=VARCHAR},
+            inspector_id = #{inspectorId,jdbcType=VARCHAR},
+            inspect_date = #{inspectDate,jdbcType=DATE}
+        WHERE arrival_id = #{arrivalId,jdbcType=INTEGER}
+    </update>
+
+    <delete id="deleteByArrivalId" parameterType="java.lang.Integer">
+        DELETE FROM purchase_arrivals
+        WHERE arrival_id = #{arrivalId,jdbcType=INTEGER}
+    </delete>
+
+</mapper>

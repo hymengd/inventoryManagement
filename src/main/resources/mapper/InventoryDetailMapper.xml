@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.seig.backend.mapper.InventoryDetailMapper">
+
+    <resultMap id="BaseResultMap" type="com.seig.backend.entity.storage.InventoryDetail">
+        <id column="detail_id" jdbcType="INTEGER" property="detailId"/>
+        <result column="batch_id" jdbcType="INTEGER" property="batchId"/>
+        <result column="drug_id" jdbcType="VARCHAR" property="drugId"/>
+        <result column="location_id" jdbcType="INTEGER" property="locationId"/>
+        <result column="quantity" jdbcType="DECIMAL" property="quantity"/>
+        <result column="available_quantity" jdbcType="DECIMAL" property="availableQuantity"/>
+        <result column="locked_quantity" jdbcType="DECIMAL" property="lockedQuantity"/>
+        <result column="is_primary_location" jdbcType="TINYINT" property="isPrimaryLocation"/>
+        <result column="temperature_zone" jdbcType="VARCHAR" property="temperatureZone"/>
+        <result column="humidity_condition" jdbcType="VARCHAR" property="humidityCondition"/>
+        <result column="light_condition" jdbcType="VARCHAR" property="lightCondition"/>
+        <result column="last_stocktake_date" jdbcType="DATE" property="lastStocktakeDate"/>
+        <result column="last_stocktake_quantity" jdbcType="DECIMAL" property="lastStocktakeQuantity"/>
+        <result column="stocktake_difference" jdbcType="DECIMAL" property="stocktakeDifference"/>
+        <result column="inventory_age" jdbcType="INTEGER" property="inventoryAge"/>
+        <result column="last_move_date" jdbcType="TIMESTAMP" property="lastMoveDate"/>
+        <result column="move_reason" jdbcType="VARCHAR" property="moveReason"/>
+        <result column="status" jdbcType="TINYINT" property="status"/>
+        <result column="created_at" jdbcType="TIMESTAMP" property="createdAt"/>
+        <result column="updated_at" jdbcType="TIMESTAMP" property="updatedAt"/>
+        <result column="created_by" jdbcType="INTEGER" property="createdBy"/>
+        <result column="updated_by" jdbcType="INTEGER" property="updatedBy"/>
+    </resultMap>
+
+
+    <sql id="Base_Column_List">
+        detail_id, batch_id, drug_id, location_id, quantity,
+        available_quantity, locked_quantity, is_primary_location, temperature_zone, humidity_condition,
+        light_condition, last_stocktake_date, last_stocktake_quantity, stocktake_difference,
+        inventory_age, last_move_date, move_reason, status, created_at, updated_at, created_by, updated_by
+    </sql>
+
+    <insert id="insert" parameterType="com.seig.backend.entity.storage.InventoryDetail" useGeneratedKeys="true" keyProperty="detailId">
+        INSERT INTO inventory_details (
+        <include refid="Base_Column_List"/>
+        ) VALUES (
+        #{batchId}, #{drugId}, #{locationId}, #{quantity},
+        #{availableQuantity}, #{lockedQuantity}, #{isPrimaryLocation}, #{temperatureZone}, #{humidityCondition},
+        #{lightCondition}, #{lastStocktakeDate}, #{lastStocktakeQuantity}, #{stocktakeDifference},
+        #{inventoryAge}, #{lastMoveDate}, #{moveReason}, #{status}, NOW(), NOW(), #{createdBy}, #{updatedBy}
+        )
+    </insert>
+
+    <select id="selectById" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM inventory_details
+        WHERE detail_id = #{detailId}
+    </select>
+
+    <select id="selectByBatchId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM inventory_details
+        WHERE batch_id = #{batchId}
+        ORDER BY detail_id DESC
+    </select>
+
+    <select id="selectByLocationId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM inventory_details
+        WHERE location_id = #{locationId}
+        ORDER BY detail_id DESC
+    </select>
+
+    <select id="selectAll" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM inventory_details
+        ORDER BY detail_id DESC
+    </select>
+
+    <select id="selectByBatchAndLocation" resultType="com.seig.backend.entity.storage.InventoryDetail">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM inventory_details
+        WHERE batch_id = #{batchId} AND location_id = #{locationId}
+    </select>
+
+    <update id="update" parameterType="com.seig.backend.entity.storage.InventoryDetail">
+        UPDATE inventory_details
+        <set>
+            <if test="batchId != null">batch_id = #{batchId},</if>
+            <if test="drugId != null">drug_id = #{drugId},</if>
+            <if test="locationId != null">location_id = #{locationId},</if>
+            <if test="quantity != null">quantity = #{quantity},</if>
+            <if test="availableQuantity != null">available_quantity = #{availableQuantity},</if>
+            <if test="lockedQuantity != null">locked_quantity = #{lockedQuantity},</if>
+            <if test="isPrimaryLocation != null">is_primary_location = #{isPrimaryLocation},</if>
+            <if test="temperatureZone != null">temperature_zone = #{temperatureZone},</if>
+            <if test="humidityCondition != null">humidity_condition = #{humidityCondition},</if>
+            <if test="lightCondition != null">light_condition = #{lightCondition},</if>
+            <if test="lastStocktakeDate != null">last_stocktake_date = #{lastStocktakeDate},</if>
+            <if test="lastStocktakeQuantity != null">last_stocktake_quantity = #{lastStocktakeQuantity},</if>
+            <if test="stocktakeDifference != null">stocktake_difference = #{stocktakeDifference},</if>
+            <if test="inventoryAge != null">inventory_age = #{inventoryAge},</if>
+            <if test="lastMoveDate != null">last_move_date = #{lastMoveDate},</if>
+            <if test="moveReason != null">move_reason = #{moveReason},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="updatedBy != null">updated_by = #{updatedBy},</if>
+            updated_at = NOW()
+        </set>
+        WHERE detail_id = #{detailId}
+    </update>
+
+    <delete id="deleteById" parameterType="java.lang.Integer">
+        DELETE FROM inventory_details
+        WHERE detail_id = #{detailId}
+    </delete>
+</mapper>

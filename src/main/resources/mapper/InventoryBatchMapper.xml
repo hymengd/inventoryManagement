@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.seig.backend.mapper.InventoryBatchMapper">
+
+    <resultMap id="BaseResultMap" type="com.seig.backend.entity.storage.InventoryBatch">
+        <id column="batch_id" jdbcType="INTEGER" property="batchId"/>
+        <result column="batch_number" jdbcType="VARCHAR" property="batchNumber"/>
+        <result column="sku_id" jdbcType="INTEGER" property="skuId"/>
+        <result column="supplier_id" jdbcType="INTEGER" property="supplierId"/>
+        <result column="purchase_order_id" jdbcType="INTEGER" property="purchaseOrderId"/>
+        <result column="production_date" jdbcType="DATE" property="productionDate"/>
+        <result column="expiry_date" jdbcType="DATE" property="expiryDate"/>
+        <result column="manufacture_date" jdbcType="DATE" property="manufactureDate"/>
+        <result column="sterilization_batch" jdbcType="VARCHAR" property="sterilizationBatch"/>
+        <result column="quarantine_date" jdbcType="DATE" property="quarantineDate"/>
+        <result column="quarantine_person" jdbcType="VARCHAR" property="quarantinePerson"/>
+        <result column="quarantine_result" jdbcType="TINYINT" property="quarantineResult"/>
+        <result column="rejection_reason" jdbcType="VARCHAR" property="rejectionReason"/>
+        <result column="purchase_price" jdbcType="DECIMAL" property="purchasePrice"/>
+        <result column="cost_price" jdbcType="DECIMAL" property="costPrice"/>
+        <result column="total_quantity" jdbcType="DECIMAL" property="totalQuantity"/>
+        <result column="available_quantity" jdbcType="DECIMAL" property="availableQuantity"/>
+        <result column="locked_quantity" jdbcType="DECIMAL" property="lockedQuantity"/>
+        <result column="damaged_quantity" jdbcType="DECIMAL" property="damagedQuantity"/>
+        <result column="destroyed_quantity" jdbcType="DECIMAL" property="destroyedQuantity"/>
+        <result column="warehouse_id" jdbcType="INTEGER" property="warehouseId"/>
+        <result column="storage_condition" jdbcType="VARCHAR" property="storageCondition"/>
+        <result column="temperature_log" jdbcType="VARCHAR" property="temperatureLog"/>
+        <result column="quality_status" jdbcType="TINYINT" property="qualityStatus"/>
+        <result column="inventory_status" jdbcType="TINYINT" property="inventoryStatus"/>
+        <result column="first_in_date" jdbcType="DATE" property="firstInDate"/>
+        <result column="last_in_date" jdbcType="DATE" property="lastInDate"/>
+        <result column="last_out_date" jdbcType="DATE" property="lastOutDate"/>
+        <result column="stocktake_date" jdbcType="DATE" property="stocktakeDate"/>
+        <result column="stocktake_difference" jdbcType="DECIMAL" property="stocktakeDifference"/>
+        <result column="remark" jdbcType="LONGVARCHAR" property="remark"/>
+        <result column="created_at" jdbcType="TIMESTAMP" property="createdAt"/>
+        <result column="updated_at" jdbcType="TIMESTAMP" property="updatedAt"/>
+        <result column="created_by" jdbcType="INTEGER" property="createdBy"/>
+        <result column="updated_by" jdbcType="INTEGER" property="updatedBy"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        batch_id, batch_number, sku_id, supplier_id, purchase_order_id,
+        production_date, expiry_date, manufacture_date, sterilization_batch,
+        quarantine_date, quarantine_person, quarantine_result, rejection_reason,
+        purchase_price, cost_price, total_quantity, available_quantity, locked_quantity,
+        damaged_quantity, destroyed_quantity, warehouse_id, storage_condition,
+        temperature_log, quality_status, inventory_status, first_in_date,
+        last_in_date, last_out_date, stocktake_date, stocktake_difference, remark,
+        created_at, updated_at, created_by, updated_by
+    </sql>
+
+    <insert id="insert" parameterType="com.seig.backend.entity.storage.InventoryBatch" useGeneratedKeys="true" keyProperty="batchId">
+        INSERT INTO inventory_batches (
+        <include refid="Base_Column_List"/>
+        ) VALUES (
+        #{batchNumber}, #{skuId}, #{supplierId}, #{purchaseOrderId},
+        #{productionDate}, #{expiryDate}, #{manufactureDate}, #{sterilizationBatch},
+        #{quarantineDate}, #{quarantinePerson}, #{quarantineResult}, #{rejectionReason},
+        #{purchasePrice}, #{costPrice}, #{totalQuantity}, #{availableQuantity}, #{lockedQuantity},
+        #{damagedQuantity}, #{destroyedQuantity}, #{warehouseId}, #{storageCondition},
+        #{temperatureLog}, #{qualityStatus}, #{inventoryStatus}, #{firstInDate},
+        #{lastInDate}, #{lastOutDate}, #{stocktakeDate}, #{stocktakeDifference}, #{remark},
+        NOW(), NOW(), #{createdBy}, #{updatedBy}
+        )
+    </insert>
+
+    <select id="selectById" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM inventory_batches
+        WHERE batch_id = #{batchId}
+    </select>
+
+    <select id="selectBySkuId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM inventory_batches
+        WHERE sku_id = #{skuId}
+        ORDER BY batch_id DESC
+    </select>
+
+    <select id="selectAll" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM inventory_batches
+        ORDER BY batch_id DESC
+    </select>
+
+    <select id="selectByBatchNumber" parameterType="java.lang.String" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM inventory_batches
+        WHERE batch_number = #{batchNumber}
+    </select>
+
+    <update id="update" parameterType="com.seig.backend.entity.storage.InventoryBatch">
+        UPDATE inventory_batches
+        <set>
+            <if test="batchNumber != null">batch_number = #{batchNumber},</if>
+            <if test="skuId != null">sku_id = #{skuId},</if>
+            <if test="supplierId != null">supplier_id = #{supplierId},</if>
+            <if test="purchaseOrderId != null">purchase_order_id = #{purchaseOrderId},</if>
+            <if test="productionDate != null">production_date = #{productionDate},</if>
+            <if test="expiryDate != null">expiry_date = #{expiryDate},</if>
+            <if test="manufactureDate != null">manufacture_date = #{manufactureDate},</if>
+            <if test="sterilizationBatch != null">sterilization_batch = #{sterilizationBatch},</if>
+            <if test="quarantineDate != null">quarantine_date = #{quarantineDate},</if>
+            <if test="quarantinePerson != null">quarantine_person = #{quarantinePerson},</if>
+            <if test="quarantineResult != null">quarantine_result = #{quarantineResult},</if>
+            <if test="rejectionReason != null">rejection_reason = #{rejectionReason},</if>
+            <if test="purchasePrice != null">purchase_price = #{purchasePrice},</if>
+            <if test="costPrice != null">cost_price = #{costPrice},</if>
+            <if test="totalQuantity != null">total_quantity = #{totalQuantity},</if>
+            <if test="availableQuantity != null">available_quantity = #{availableQuantity},</if>
+            <if test="lockedQuantity != null">locked_quantity = #{lockedQuantity},</if>
+            <if test="damagedQuantity != null">damaged_quantity = #{damagedQuantity},</if>
+            <if test="destroyedQuantity != null">destroyed_quantity = #{destroyedQuantity},</if>
+            <if test="warehouseId != null">warehouse_id = #{warehouseId},</if>
+            <if test="storageCondition != null">storage_condition = #{storageCondition},</if>
+            <if test="temperatureLog != null">temperature_log = #{temperatureLog},</if>
+            <if test="qualityStatus != null">quality_status = #{qualityStatus},</if>
+            <if test="inventoryStatus != null">inventory_status = #{inventoryStatus},</if>
+            <if test="firstInDate != null">first_in_date = #{firstInDate},</if>
+            <if test="lastInDate != null">last_in_date = #{lastInDate},</if>
+            <if test="lastOutDate != null">last_out_date = #{lastOutDate},</if>
+            <if test="stocktakeDate != null">stocktake_date = #{stocktakeDate},</if>
+            <if test="stocktakeDifference != null">stocktake_difference = #{stocktakeDifference},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="updatedBy != null">updated_by = #{updatedBy},</if>
+            updated_at = NOW()
+        </set>
+        WHERE batch_id = #{batchId}
+    </update>
+
+    <delete id="deleteById" parameterType="java.lang.Integer">
+        DELETE FROM inventory_batches
+        WHERE batch_id = #{batchId}
+    </delete>
+</mapper>
