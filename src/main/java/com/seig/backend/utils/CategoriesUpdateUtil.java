@@ -1,6 +1,6 @@
 package com.seig.backend.utils;
 
-import com.seig.backend.entity.Categories;
+import com.seig.backend.product.entity.Categories;
 
 /**
  * 分类更新工具类 - 支持非空字段更新 ----- 现在在sql语句判断空了

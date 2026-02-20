@@ -1,6 +1,6 @@
 package com.seig.backend.entity;
 
-import com.seig.backend.entity.storage.QuarantineBatch;
+import com.seig.backend.storage.entity.QuarantineBatch;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 

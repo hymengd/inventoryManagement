@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.seig.backend.storage.mapper.QuarantineBatchMapper">
+
+    <!-- 结果映射 -->
+    <resultMap id="BaseResultMap" type="com.seig.backend.storage.entity.QuarantineBatch">
+        <id column="quarantine_id" property="quarantineId"/>
+        <result column="purchase_order_id" property="purchaseOrderId"/>
+        <result column="sku_id" property="skuId"/>
+        <result column="expected_quantity" property="expectedQuantity"/>
+        <result column="actual_quantity" property="actualQuantity"/>
+        <result column="received_date" property="receivedDate"/>
+        <result column="receiver" property="receiver"/>
+        <result column="quarantine_location" property="quarantineLocation"/>
+        <result column="quarantine_status" property="quarantineStatus"/>
+        <result column="created_at" property="createdAt"/>
+        <result column="updated_at" property="updatedAt"/>
+    </resultMap>
+
+    <!-- 插入待验批次 -->
+    <insert id="insert" parameterType="com.seig.backend.storage.entity.QuarantineBatch" useGeneratedKeys="true" keyProperty="quarantineId">
+        INSERT INTO quarantine_batches (
+            purchase_order_id, sku_id, expected_quantity, actual_quantity,
+            received_date, receiver, quarantine_location, quarantine_status,
+            created_at, updated_at
+        ) VALUES (
+                     #{purchaseOrderId}, #{skuId}, #{expectedQuantity}, #{actualQuantity},
+                     #{receivedDate}, #{receiver}, #{quarantineLocation}, #{quarantineStatus},
+                     NOW(), NOW()
+                 )
+    </insert>
+
+    <!-- 根据ID查询待验批次 -->
+    <select id="selectById" parameterType="int" resultMap="BaseResultMap">
+        SELECT * FROM quarantine_batches WHERE quarantine_id = #{quarantineId}
+    </select>
+
+    <!-- 根据采购订单ID查询待验批次列表 -->
+    <select id="selectByPurchaseOrderId" parameterType="int" resultMap="BaseResultMap">
+        SELECT * FROM quarantine_batches WHERE purchase_order_id = #{purchaseOrderId}
+    </select>
+
+    <!-- 查询所有待验批次 -->
+    <select id="selectAll" resultMap="BaseResultMap">
+        SELECT * FROM quarantine_batches
+    </select>
+
+    <!-- 更新待验批次 -->
+    <update id="update" parameterType="com.seig.backend.storage.entity.QuarantineBatch">
+        UPDATE quarantine_batches
+        SET
+            expected_quantity = #{expectedQuantity},
+            actual_quantity = #{actualQuantity},
+            received_date = #{receivedDate},
+            receiver = #{receiver},
+            quarantine_location = #{quarantineLocation},
+            quarantine_status = #{quarantineStatus},
+            updated_at = NOW()
+        WHERE quarantine_id = #{quarantineId}
+    </update>
+
+    <!-- 删除待验批次 -->
+    <delete id="deleteById" parameterType="int">
+        DELETE FROM quarantine_batches WHERE quarantine_id = #{quarantineId}
+    </delete>
+</mapper>

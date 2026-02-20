@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.seig.backend.system.mapper.SupplierMapper">
+
+    <resultMap id="BaseResultMap" type="com.seig.backend.system.entity.Supplier">
+        <id column="supplier_id" jdbcType="INTEGER" property="supplierId" />
+        <result column="supplier_name" jdbcType="VARCHAR" property="supplierName" />
+        <result column="contact_person" jdbcType="VARCHAR" property="contactPerson" />
+        <result column="contact_phone" jdbcType="VARCHAR" property="contactPhone" />
+        <result column="contact_email" jdbcType="VARCHAR" property="contactEmail" />
+        <result column="drug_business_license" jdbcType="VARCHAR" property="drugBusinessLicense" />
+        <result column="gsp_certificate" jdbcType="VARCHAR" property="gspCertificate" />
+        <result column="business_scope" jdbcType="VARCHAR" property="businessScope" />
+        <result column="main_drug_categories" jdbcType="VARCHAR" property="mainDrugCategories" />
+        <result column="supply_capability" jdbcType="LONGVARCHAR" property="supplyCapability" />
+        <result column="delivery_time" jdbcType="INTEGER" property="deliveryTime" />
+        <result column="quality_system" jdbcType="VARCHAR" property="qualitySystem" />
+        <result column="cold_chain_support" jdbcType="BIT" property="coldChainSupport" />
+        <result column="status" jdbcType="BIT" property="status" />
+        <result column="created_at" jdbcType="TIMESTAMP" property="createdAt" />
+        <result column="updated_at" jdbcType="TIMESTAMP" property="updatedAt" />
+        <result column="entity_type" jdbcType="VARCHAR" property="entityType" />
+        <result column="parent_manufacturer_id" jdbcType="INTEGER" property="parentManufacturerId" />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        supplier_id, supplier_name, contact_person, contact_phone, contact_email,
+        drug_business_license, gsp_certificate, business_scope,
+        main_drug_categories, supply_capability, delivery_time,
+        quality_system, cold_chain_support, status,
+        created_at, updated_at, entity_type, parent_manufacturer_id
+    </sql>
+
+    <insert id="insert" parameterType="com.seig.backend.system.entity.Supplier" useGeneratedKeys="true" keyProperty="supplierId">
+        INSERT INTO suppliers (
+            supplier_name, contact_person, contact_phone, contact_email,
+            drug_business_license, gsp_certificate, business_scope,
+            main_drug_categories, supply_capability, delivery_time,
+            quality_system, cold_chain_support, status,
+            created_at, updated_at, entity_type, parent_manufacturer_id
+        )
+        VALUES (
+            #{supplierName,jdbcType=VARCHAR}, #{contactPerson,jdbcType=VARCHAR},
+            #{contactPhone,jdbcType=VARCHAR}, #{contactEmail,jdbcType=VARCHAR},
+            #{drugBusinessLicense,jdbcType=VARCHAR}, #{gspCertificate,jdbcType=VARCHAR},
+            #{businessScope,jdbcType=VARCHAR}, #{mainDrugCategories,jdbcType=VARCHAR},
+            #{supplyCapability,jdbcType=LONGVARCHAR}, #{deliveryTime,jdbcType=INTEGER},
+            #{qualitySystem,jdbcType=VARCHAR}, #{coldChainSupport,jdbcType=BIT},
+            #{status,jdbcType=BIT}, #{createdAt,jdbcType=TIMESTAMP},
+            #{updatedAt,jdbcType=TIMESTAMP}, #{entityType,jdbcType=VARCHAR},
+            #{parentManufacturerId,jdbcType=INTEGER}
+        )
+    </insert>
+
+    <update id="updateByPrimaryKey" parameterType="com.seig.backend.system.entity.Supplier">
+        UPDATE suppliers
+        SET
+            supplier_name = #{supplierName,jdbcType=VARCHAR},
+            contact_person = #{contactPerson,jdbcType=VARCHAR},
+            contact_phone = #{contactPhone,jdbcType=VARCHAR},
+            contact_email = #{contactEmail,jdbcType=VARCHAR},
+            drug_business_license = #{drugBusinessLicense,jdbcType=VARCHAR},
+            gsp_certificate = #{gspCertificate,jdbcType=VARCHAR},
+            business_scope = #{businessScope,jdbcType=VARCHAR},
+            main_drug_categories = #{mainDrugCategories,jdbcType=VARCHAR},
+            supply_capability = #{supplyCapability,jdbcType=LONGVARCHAR},
+            delivery_time = #{deliveryTime,jdbcType=INTEGER},
+            quality_system = #{qualitySystem,jdbcType=VARCHAR},
+            cold_chain_support = #{coldChainSupport,jdbcType=BIT},
+            status = #{status,jdbcType=BIT},
+            updated_at = #{updatedAt,jdbcType=TIMESTAMP},
+            entity_type = #{entityType,jdbcType=VARCHAR},
+            parent_manufacturer_id = #{parentManufacturerId,jdbcType=INTEGER}
+        WHERE supplier_id = #{supplierId,jdbcType=INTEGER}
+    </update>
+
+    <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM suppliers
+        WHERE supplier_id = #{supplierId,jdbcType=INTEGER}
+    </select>
+
+    <select id="selectAllSuppliers" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM suppliers
+        ORDER BY supplier_id DESC
+    </select>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+        DELETE FROM suppliers
+        WHERE supplier_id = #{supplierId,jdbcType=INTEGER}
+    </delete>
+
+</mapper>

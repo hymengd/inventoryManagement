@@ -1,5 +1,6 @@
 package com.seig.backend.entity;
 
+import com.seig.backend.product.entity.Categories;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 

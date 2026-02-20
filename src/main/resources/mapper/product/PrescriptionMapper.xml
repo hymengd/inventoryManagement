@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.seig.backend.product.mapper.PrescriptionMapper">
+
+    <!-- 结果映射 -->
+    <resultMap id="PrescriptionResultMap" type="com.seig.backend.product.entity.Prescription">
+        <id column="id" property="id"/>
+        <result column="patient_id" property="patientId"/>
+        <result column="doctor_id" property="doctorId"/>
+        <result column="diagnosis" property="diagnosis"/>
+        <result column="medicines" property="medicines"/>
+        <result column="status" property="status"/>
+        <result column="pharmacist_id" property="pharmacistId"/>
+        <result column="lock_time" property="lockTime"/>
+        <result column="complete_time" property="completeTime"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+
+    <!-- 插入药方 -->
+    <insert id="insert" parameterType="com.seig.backend.product.entity.Prescription" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO prescription (
+            patient_id,
+            doctor_id,
+            diagnosis,
+            medicines,
+            status,
+            create_time,
+            update_time
+        ) VALUES (
+                     #{patientId},
+                     #{doctorId},
+                     #{diagnosis},
+                     #{medicines},
+                     #{status},
+                     #{createTime},
+                     #{updateTime}
+                 )
+    </insert>
+
+    <!-- 根据ID查询 -->
+    <select id="selectById" parameterType="java.lang.Long" resultMap="PrescriptionResultMap">
+        SELECT * FROM prescription WHERE id = #{id}
+    </select>
+
+    <!-- 根据患者ID查询 -->
+    <select id="selectByPatientId" parameterType="java.lang.Long" resultMap="PrescriptionResultMap">
+        SELECT * FROM prescription WHERE patient_id = #{patientId} ORDER BY create_time DESC
+    </select>
+
+    <!-- 根据医生ID查询 -->
+    <select id="selectByDoctorId" parameterType="java.lang.Long" resultMap="PrescriptionResultMap">
+        SELECT * FROM prescription WHERE doctor_id = #{doctorId} ORDER BY create_time DESC
+    </select>
+
+    <!-- 查询所有 -->
+    <select id="selectAll" resultMap="PrescriptionResultMap">
+        SELECT * FROM prescription ORDER BY create_time DESC
+    </select>
+
+    <!-- 更新药方 -->
+    <update id="update" parameterType="com.seig.backend.product.entity.Prescription">
+        UPDATE prescription SET
+                                diagnosis = #{diagnosis},
+                                medicines = #{medicines},
+                                status = #{status},
+                                update_time = #{updateTime}
+        WHERE id = #{id}
+    </update>
+
+    <!-- 删除药方 -->
+    <delete id="deleteById" parameterType="java.lang.Long">
+        DELETE FROM prescription WHERE id = #{id}
+    </delete>
+
+    <!-- 根据状态查询 -->
+    <select id="selectByStatus" parameterType="java.lang.Byte" resultMap="PrescriptionResultMap">
+        SELECT * FROM prescription WHERE status = #{status} ORDER BY create_time DESC
+    </select>
+
+</mapper>

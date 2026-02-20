@@ -1,7 +1,7 @@
 package com.seig.backend.controller;
 
 import com.seig.backend.common.Result;
-import com.seig.backend.entity.storage.WarehouseContainer;
+import com.seig.backend.storage.entity.WarehouseContainer;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

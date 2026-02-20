@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.seig.backend.storage.mapper.WarehouseContainerMapper">
+
+    <resultMap id="BaseResultMap" type="com.seig.backend.storage.entity.WarehouseContainer">
+        <id column="zone_id" jdbcType="INTEGER" property="zoneId"/>
+        <result column="warehouse_id" jdbcType="INTEGER" property="warehouseId"/>
+        <result column="zone_code" jdbcType="VARCHAR" property="zoneCode"/>
+        <result column="zone_name" jdbcType="VARCHAR" property="zoneName"/>
+        <result column="zone_type" jdbcType="TINYINT" property="zoneType"/>
+        <result column="gsp_zone_type" jdbcType="TINYINT" property="gspZoneType"/>
+        <result column="risk_level" jdbcType="TINYINT" property="riskLevel"/>
+        <result column="temperature_min" jdbcType="DECIMAL" property="temperatureMin"/>
+        <result column="temperature_max" jdbcType="DECIMAL" property="temperatureMax"/>
+        <result column="humidity_min" jdbcType="DECIMAL" property="humidityMin"/>
+        <result column="humidity_max" jdbcType="DECIMAL" property="humidityMax"/>
+        <result column="current_temp" jdbcType="DECIMAL" property="currentTemp"/>
+        <result column="current_humidity" jdbcType="DECIMAL" property="currentHumidity"/>
+        <result column="parent_zone_id" jdbcType="INTEGER" property="parentZoneId"/>
+        <result column="is_narcotic" jdbcType="TINYINT" property="isNarcotic"/>
+        <result column="is_double_lock" jdbcType="TINYINT" property="isDoubleLock"/>
+        <result column="is_access_control" jdbcType="TINYINT" property="isAccessControl"/>
+        <result column="status" jdbcType="TINYINT" property="status"/>
+        <result column="remark" jdbcType="VARCHAR" property="remark"/>
+        <result column="created_time" jdbcType="TIMESTAMP" property="createdTime"/>
+        <result column="updated_time" jdbcType="TIMESTAMP" property="updatedTime"/>
+        </resultMap>
+    <!-- 插入货架/容器 -->
+    <insert id="insert" parameterType="com.seig.backend.storage.entity.WarehouseContainer" useGeneratedKeys="true" keyProperty="containerId">
+        INSERT INTO warehouse_container (
+            zone_id, container_code, container_name, container_type,
+            max_weight, dimension, volume, device_no, manufacturer,
+            install_date, status, created_time, updated_time, remark
+        ) VALUES (
+                     #{zoneId}, #{containerCode}, #{containerName}, #{containerType},
+                     #{maxWeight}, #{dimension}, #{volume}, #{deviceNo}, #{manufacturer},
+                     #{installDate}, #{status}, #{createdTime}, #{updatedTime}, #{remark}
+                 )
+    </insert>
+
+    <!-- 根据ID查询货架/容器 -->
+    <select id="selectById" parameterType="int" resultMap="BaseResultMap">
+        SELECT * FROM warehouse_container WHERE container_id = #{containerId}
+    </select>
+
+    <!-- 根据库区ID查询货架/容器列表 -->
+    <select id="selectByZoneId" parameterType="int" resultMap="BaseResultMap">
+        SELECT * FROM warehouse_container WHERE zone_id = #{zoneId}
+    </select>
+
+    <!-- 查询所有货架/容器 -->
+    <select id="selectAll" resultMap="BaseResultMap">
+        SELECT * FROM warehouse_container
+    </select>
+
+    <!-- 更新货架/容器 -->
+    <update id="update" parameterType="com.seig.backend.storage.entity.WarehouseContainer">
+        UPDATE warehouse_container
+        SET
+            zone_id = #{zoneId},
+            container_code = #{containerCode},
+            container_name = #{containerName},
+            container_type = #{containerType},
+            max_weight = #{maxWeight},
+            dimension = #{dimension},
+            volume = #{volume},
+            device_no = #{deviceNo},
+            manufacturer = #{manufacturer},
+            install_date = #{installDate},
+            status = #{status},
+            updated_time = #{updatedTime},
+            remark = #{remark}
+        WHERE container_id = #{containerId}
+    </update>
+
+    <!-- 删除货架/容器 -->
+    <delete id="deleteById" parameterType="int">
+        DELETE FROM warehouse_container WHERE container_id = #{containerId}
+    </delete>
+    <select id="selectByConditions" resultType="int">
+        SELECT container_id
+        FROM warehouse_containers
+        WHERE zone_id IN
+        <foreach item="zoneId" collection="zoneIds" open="(" separator="," close=")">
+            #{zoneId}
+        </foreach>
+        AND is_refrigerated = #{isRefrigerated}
+        AND is_narcotic_safe = #{isNarcoticSafe}
+    </select>
+
+</mapper>

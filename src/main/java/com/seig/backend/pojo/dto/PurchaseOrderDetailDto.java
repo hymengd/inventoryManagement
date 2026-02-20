@@ -1,7 +1,7 @@
 package com.seig.backend.pojo.dto;
 
-import com.seig.backend.entity.record.PurchaseOrder;
-import com.seig.backend.entity.record.PurchaseOrderItem;
+import com.seig.backend.procurement.entity.PurchaseOrder;
+import com.seig.backend.procurement.entity.PurchaseOrderItem;
 
 import java.util.List;
 

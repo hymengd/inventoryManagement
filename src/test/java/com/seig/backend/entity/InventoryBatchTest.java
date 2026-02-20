@@ -1,6 +1,6 @@
 package com.seig.backend.entity;
 
-import com.seig.backend.entity.storage.InventoryBatch;
+import com.seig.backend.storage.entity.InventoryBatch;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
