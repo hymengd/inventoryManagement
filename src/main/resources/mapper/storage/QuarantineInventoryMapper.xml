@@ -13,7 +13,7 @@
         <result column="temperature_zone" property="temperatureZone"/>
         <result column="humidity_condition" property="humidityCondition"/>
         <result column="sku_id" property="skuId"/>
-<!--        <result column="batch_id" property="batchId"/>-->
+        <!--        <result column="batch_id" property="batchId"/>-->
         <result column="created_at" property="createdAt"/>
         <result column="updated_at" property="updatedAt"/>
     </resultMap>

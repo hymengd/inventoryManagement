@@ -1,6 +1,7 @@
 package com.seig.backend.storage.mapper;
 
 import com.seig.backend.storage.entity.InventoryBatch;
+import com.seig.backend.storage.entity.InventoryDetail;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -43,4 +44,7 @@ public interface InventoryBatchMapper {
      * 根据批次号查询
      */
     InventoryBatch selectByBatchNumber(String batchNumber);
+
+
+
 }

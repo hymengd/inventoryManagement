@@ -4,7 +4,7 @@
 
     <!-- 结果映射 -->
     <resultMap id="PrescriptionResultMap" type="com.seig.backend.product.entity.Prescription">
-        <id column="id" property="id"/>
+        <result column="skuId" property="skuId"/>
         <result column="patient_id" property="patientId"/>
         <result column="doctor_id" property="doctorId"/>
         <result column="diagnosis" property="diagnosis"/>
@@ -19,23 +19,22 @@
 
     <!-- 插入药方 -->
     <insert id="insert" parameterType="com.seig.backend.product.entity.Prescription" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO prescription (
-            patient_id,
-            doctor_id,
-            diagnosis,
-            medicines,
-            status,
-            create_time,
-            update_time
-        ) VALUES (
-                     #{patientId},
-                     #{doctorId},
-                     #{diagnosis},
-                     #{medicines},
-                     #{status},
-                     #{createTime},
-                     #{updateTime}
-                 )
+        INSERT INTO prescription (visit_id,
+                                  patient_id,
+                                  doctor_id,
+                                  diagnosis,
+                                  medicines,
+                                  status,
+                                  create_time,
+                                  update_time)
+        VALUES (#{visitId},
+                #{patientId},
+                #{doctorId},
+                #{diagnosis},
+                #{medicines},
+                #{status},
+                #{createTime},
+                #{updateTime})
     </insert>
 
     <!-- 根据ID查询 -->
@@ -77,5 +76,8 @@
     <select id="selectByStatus" parameterType="java.lang.Byte" resultMap="PrescriptionResultMap">
         SELECT * FROM prescription WHERE status = #{status} ORDER BY create_time DESC
     </select>
-
+    <!-- 查询 完成时间 为空的药方记录 -->
+    <select id="selectByCompleteTimeIsNull" resultMap="PrescriptionResultMap">
+        SELECT * FROM prescription WHERE complete_time IS NULL ORDER BY create_time DESC
+    </select>
 </mapper>

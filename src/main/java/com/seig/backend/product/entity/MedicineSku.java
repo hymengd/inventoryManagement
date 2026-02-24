@@ -27,6 +27,21 @@ public class MedicineSku {
     private Integer medicineId;
 
     /**
+     * 药品通用名称
+     */
+    private String genericName;
+
+    /**
+     * 药品英文名称
+     */
+    private String englishName;
+
+    /**
+     * 药品化学名称
+     */
+    private String chemicalName;
+
+    /**
      * 供应商ID，外键关联suppliers
      */
     private Integer supplierId;
@@ -161,7 +176,7 @@ public class MedicineSku {
      */
     private Boolean isMoistureSensitive;
 
-//    min_temperature DECIMAL(5,2) COMMENT '最低温度要求',
+    //    min_temperature DECIMAL(5,2) COMMENT '最低温度要求',
 //    max_temperature DECIMAL(5,2) COMMENT '最高温度要求',
     private BigDecimal minTemperature;
     private BigDecimal maxTemperature;
@@ -241,14 +256,7 @@ public class MedicineSku {
      */
     private Integer updatedBy;
 
-    public BigDecimal getRetailPrice() {
-        return retailPrice;
-    }
-
-    public void setRetailPrice(BigDecimal retailPrice) {
-        this.retailPrice = retailPrice;
-    }
-
+    // Getter 和 Setter 方法
     public Integer getSkuId() {
         return skuId;
     }
@@ -271,6 +279,30 @@ public class MedicineSku {
 
     public void setMedicineId(Integer medicineId) {
         this.medicineId = medicineId;
+    }
+
+    public String getGenericName() {
+        return genericName;
+    }
+
+    public void setGenericName(String genericName) {
+        this.genericName = genericName;
+    }
+
+    public String getEnglishName() {
+        return englishName;
+    }
+
+    public void setEnglishName(String englishName) {
+        this.englishName = englishName;
+    }
+
+    public String getChemicalName() {
+        return chemicalName;
+    }
+
+    public void setChemicalName(String chemicalName) {
+        this.chemicalName = chemicalName;
     }
 
     public Integer getSupplierId() {
@@ -359,6 +391,14 @@ public class MedicineSku {
 
     public void setWholesalePrice(BigDecimal wholesalePrice) {
         this.wholesalePrice = wholesalePrice;
+    }
+
+    public BigDecimal getRetailPrice() {
+        return retailPrice;
+    }
+
+    public void setRetailPrice(BigDecimal retailPrice) {
+        this.retailPrice = retailPrice;
     }
 
     public BigDecimal getInsurancePrice() {

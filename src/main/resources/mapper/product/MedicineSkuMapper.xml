@@ -3,9 +3,12 @@
 <mapper namespace="com.seig.backend.product.mapper.MedicineSkuMapper">
 
     <resultMap id="BaseResultMap" type="com.seig.backend.product.entity.MedicineSku">
-        <id column="sku_id" jdbcType="INTEGER" property="skuId"/>
+        <result column="sku_id" jdbcType="INTEGER" property="skuId"/>
         <result column="sku_code" jdbcType="VARCHAR" property="skuCode"/>
         <result column="medicine_id" jdbcType="INTEGER" property="medicineId"/>
+        <result column="generic_name" jdbcType="VARCHAR" property="genericName"/>
+        <result column="english_name" jdbcType="VARCHAR" property="englishName"/>
+        <result column="chemical_name" jdbcType="VARCHAR" property="chemicalName"/>
         <result column="supplier_id" jdbcType="INTEGER" property="supplierId"/>
         <result column="manufacturer_id" jdbcType="INTEGER" property="manufacturerId"/>
         <result column="is_direct_from_manufacturer" jdbcType="TINYINT" property="isDirectFromManufacturer"/>
@@ -46,34 +49,33 @@
         <result column="updated_by" jdbcType="INTEGER" property="updatedBy"/>
         <result column="min_temperature" jdbcType="DECIMAL" property="minTemperature"/>
         <result column="max_temperature" jdbcType="DECIMAL" property="maxTemperature"/>
-
     </resultMap>
 
     <sql id="Base_Column_List">
-        sku_id, sku_code, medicine_id, supplier_id, manufacturer_id,
-        is_direct_from_manufacturer, brand_name, specification_detail, packaging, barcode,
-        approval_number, origin_country, purchase_price, wholesale_price, retail_price,
-        insurance_price, is_bid_winner, bid_number, is_preferred, priority_level,
-        min_purchase_quantity, purchase_unit, conversion_to_min, quality_level,
-        validity_period_months, storage_condition_detail, is_special_drug,
-        is_refrigerated, is_light_sensitive, is_moisture_sensitive, safety_stock,
-        reorder_point, avg_monthly_sales, last_purchase_date, last_sale_date, remark,
-        status, created_at, updated_at, created_by, updated_by
+        sku_id, sku_code, medicine_id, generic_name, english_name, chemical_name,
+        supplier_id, manufacturer_id, is_direct_from_manufacturer, brand_name, 
+        specification_detail, packaging, barcode, approval_number, origin_country,
+        purchase_price, wholesale_price, retail_price, insurance_price, is_bid_winner,
+        bid_number, is_preferred, priority_level, min_purchase_quantity, purchase_unit,
+        conversion_to_min, quality_level, validity_period_months, storage_condition_detail,
+        is_special_drug, is_refrigerated, is_light_sensitive, is_moisture_sensitive,
+        safety_stock, reorder_point, avg_monthly_sales, last_purchase_date, last_sale_date,
+        remark, status, created_at, updated_at, created_by, updated_by, min_temperature, max_temperature
     </sql>
 
-    <insert id="insert" parameterType="com.seig.backend.product.entity.MedicineSku" useGeneratedKeys="true" keyProperty="skuId">
+    <insert id="insert" parameterType="com.seig.backend.product.entity.MedicineSku" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO medicine_skus (
         <include refid="Base_Column_List"/>
         ) VALUES (
-        #{skuCode}, #{medicineId}, #{supplierId}, #{manufacturerId},
-        #{isDirectFromManufacturer}, #{brandName}, #{specificationDetail}, #{packaging}, #{barcode},
-        #{approvalNumber}, #{originCountry}, #{purchasePrice}, #{wholesalePrice}, #{retailPrice},
-        #{insurancePrice}, #{isBidWinner}, #{bidNumber}, #{isPreferred}, #{priorityLevel},
-        #{minPurchaseQuantity}, #{purchaseUnit}, #{conversionToMin}, #{qualityLevel},
-        #{validityPeriodMonths}, #{storageConditionDetail}, #{isSpecialDrug},
-        #{isRefrigerated}, #{isLightSensitive}, #{isMoistureSensitive}, #{safetyStock},
-        #{reorderPoint}, #{avgMonthlySales}, #{lastPurchaseDate}, #{lastSaleDate}, #{remark},
-        #{status}, NOW(), NOW(), #{createdBy}, #{updatedBy}
+        #{skuCode}, #{medicineId}, #{genericName}, #{englishName}, #{chemicalName},
+        #{supplierId}, #{manufacturerId}, #{isDirectFromManufacturer}, #{brandName},
+        #{specificationDetail}, #{packaging}, #{barcode}, #{approvalNumber}, #{originCountry},
+        #{purchasePrice}, #{wholesalePrice}, #{retailPrice}, #{insurancePrice}, #{isBidWinner},
+        #{bidNumber}, #{isPreferred}, #{priorityLevel}, #{minPurchaseQuantity}, #{purchaseUnit},
+        #{conversionToMin}, #{qualityLevel}, #{validityPeriodMonths}, #{storageConditionDetail},
+        #{isSpecialDrug}, #{isRefrigerated}, #{isLightSensitive}, #{isMoistureSensitive},
+        #{safetyStock}, #{reorderPoint}, #{avgMonthlySales}, #{lastPurchaseDate}, #{lastSaleDate},
+        #{remark}, #{status}, NOW(), NOW(), #{createdBy}, #{updatedBy}, #{minTemperature}, #{maxTemperature}
         )
     </insert>
 
@@ -99,11 +101,75 @@
         ORDER BY sku_id DESC
     </select>
 
+    <select id="selectByGenericName" parameterType="java.lang.String" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM medicine_skus
+        WHERE generic_name LIKE CONCAT('%', #{genericName}, '%')
+        ORDER BY sku_id DESC
+    </select>
+
+    <select id="selectByEnglishName" parameterType="java.lang.String" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM medicine_skus
+        WHERE english_name LIKE CONCAT('%', #{englishName}, '%')
+        ORDER BY sku_id DESC
+    </select>
+
+    <select id="selectByChemicalName" parameterType="java.lang.String" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM medicine_skus
+        WHERE chemical_name LIKE CONCAT('%', #{chemicalName}, '%')
+        ORDER BY sku_id DESC
+    </select>
+
+    <select id="selectByConditions" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM medicine_skus
+        <where>
+            <if test="genericName != null and genericName != ''">
+                AND generic_name LIKE CONCAT('%', #{genericName}, '%')
+            </if>
+            <if test="englishName != null and englishName != ''">
+                AND english_name LIKE CONCAT('%', #{englishName}, '%')
+            </if>
+            <if test="chemicalName != null and chemicalName != ''">
+                AND chemical_name LIKE CONCAT('%', #{chemicalName}, '%')
+            </if>
+            <if test="brandName != null and brandName != ''">
+                AND brand_name LIKE CONCAT('%', #{brandName}, '%')
+            </if>
+        </where>
+        ORDER BY sku_id DESC
+    </select>
+
+    <!-- 根据关键字统一搜索SKU -->
+    <select id="searchByKeyword" parameterType="java.lang.String" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM medicine_skus
+        <where>
+            <if test="keyword != null and keyword != ''">
+                (generic_name LIKE CONCAT('%', #{keyword}, '%')
+                OR english_name LIKE CONCAT('%', #{keyword}, '%')
+                OR chemical_name LIKE CONCAT('%', #{keyword}, '%')
+                OR brand_name LIKE CONCAT('%', #{keyword}, '%'))
+            </if>
+        </where>
+        ORDER BY sku_id DESC
+    </select>
+
     <update id="update" parameterType="com.seig.backend.product.entity.MedicineSku">
         UPDATE medicine_skus
         <set>
             <if test="skuCode != null">sku_code = #{skuCode},</if>
             <if test="medicineId != null">medicine_id = #{medicineId},</if>
+            <if test="genericName != null">generic_name = #{genericName},</if>
+            <if test="englishName != null">english_name = #{englishName},</if>
+            <if test="chemicalName != null">chemical_name = #{chemicalName},</if>
             <if test="supplierId != null">supplier_id = #{supplierId},</if>
             <if test="manufacturerId != null">manufacturer_id = #{manufacturerId},</if>
             <if test="brandName != null">brand_name = #{brandName},</if>
@@ -138,6 +204,8 @@
             <if test="remark != null">remark = #{remark},</if>
             <if test="status != null">status = #{status},</if>
             <if test="updatedBy != null">updated_by = #{updatedBy},</if>
+            <if test="minTemperature != null">min_temperature = #{minTemperature},</if>
+            <if test="maxTemperature != null">max_temperature = #{maxTemperature},</if>
             updated_at = NOW()
         </set>
         WHERE sku_id = #{skuId}
@@ -147,6 +215,7 @@
         DELETE FROM medicine_skus
         WHERE sku_id = #{skuId}
     </delete>
+
     <select id="selectBySupplierId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
         SELECT
         <include refid="Base_Column_List"/>

@@ -51,4 +51,8 @@ public class MedicinesServiceImpl implements MedicinesService {
 
         return dto;
     }
+    @Override
+    public List<Medicines> searchByKeyword(String keyword) {
+        return medicinesMapper.searchByKeyword(keyword);
+    }
 }

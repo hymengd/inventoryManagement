@@ -134,13 +134,13 @@
         WHERE zone_id = #{zoneId}
     </delete>
 
-<!--    仓库的温度不能低于药物温度，不能高于药物温度--><!-- 仓库高温 <= 8°C --><!-- 仓库低温 >= 2°C -->
+    <!--    仓库的温度不能低于药物温度，不能高于药物温度--><!-- 仓库高温 <= 8°C --><!-- 仓库低温 >= 2°C -->
     <select id="selectByTemperatureRange" resultType="int">
         SELECT zone_id
         FROM warehouse_zone
         WHERE warehouse_id = #{warehouseId}
-        AND temperature_min &gt;= #{minTemperature}
-        AND temperature_max &lt;= #{maxTemperature}
+          AND temperature_min &gt;= #{minTemperature}
+          AND temperature_max &lt;= #{maxTemperature}
     </select>
 
 </mapper>

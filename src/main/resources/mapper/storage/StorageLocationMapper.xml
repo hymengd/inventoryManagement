@@ -1,75 +1,75 @@
 <?xml version="1.0" encoding="UTF-8"?>
-        <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.seig.backend.storage.mapper.StorageLocationMapper">
 
-<sql id="Base_Column_List">
-    location_id, container_id, location_code, expiry_date, location_type,
+    <sql id="Base_Column_List">
+        location_id, container_id, location_code, expiry_date, location_type,
         max_weight, dimension, volume, drug_category_limit, drug_id_limit,
         status, location_usage_type, related_station_id, current_drug_id,
         is_empty, remark, created_time, updated_time
-</sql>
+    </sql>
 
-<insert id="insert" parameterType="com.seig.backend.storage.entity.StorageLocation" useGeneratedKeys="true" keyProperty="locationId">
-    INSERT INTO storage_location (
-    <include refid="Base_Column_List"/>
-    ) VALUES (
-    #{locationId}, #{containerId}, #{locationCode}, #{expiryDate}, #{locationType},
-    #{maxWeight}, #{dimension}, #{volume}, #{drugCategoryLimit}, #{drugIdLimit},
-    #{status}, #{locationUsageType}, #{relatedStationId}, #{currentDrugId},
-    #{isEmpty}, #{remark}, NOW(), NOW()
-    )
-</insert>
+    <insert id="insert" parameterType="com.seig.backend.storage.entity.StorageLocation" useGeneratedKeys="true" keyProperty="locationId">
+        INSERT INTO storage_location (
+        <include refid="Base_Column_List"/>
+        ) VALUES (
+        #{locationId}, #{containerId}, #{locationCode}, #{expiryDate}, #{locationType},
+        #{maxWeight}, #{dimension}, #{volume}, #{drugCategoryLimit}, #{drugIdLimit},
+        #{status}, #{locationUsageType}, #{relatedStationId}, #{currentDrugId},
+        #{isEmpty}, #{remark}, NOW(), NOW()
+        )
+    </insert>
 
-<select id="selectById" parameterType="int" resultType="com.seig.backend.storage.entity.StorageLocation">
-    SELECT * FROM storage_location WHERE location_id = #{locationId}
-</select>
+    <select id="selectById" parameterType="int" resultType="com.seig.backend.storage.entity.StorageLocation">
+        SELECT * FROM storage_location WHERE location_id = #{locationId}
+    </select>
 
-<select id="selectByContainerId" parameterType="int" resultType="com.seig.backend.storage.entity.StorageLocation">
-    SELECT * FROM storage_location WHERE container_id = #{containerId}
-</select>
+    <select id="selectByContainerId" parameterType="int" resultType="com.seig.backend.storage.entity.StorageLocation">
+        SELECT * FROM storage_location WHERE container_id = #{containerId}
+    </select>
 
-<update id="update" parameterType="com.seig.backend.storage.entity.StorageLocation">
-    UPDATE storage_location
-    SET
-        container_id = #{containerId},
-        location_code = #{locationCode},
-        expiry_date = #{expiryDate},
-        location_type = #{locationType},
-        max_weight = #{maxWeight},
-        dimension = #{dimension},
-        volume = #{volume},
-        drug_category_limit = #{drugCategoryLimit},
-        drug_id_limit = #{drugIdLimit},
-        status = #{status},
-        location_usage_type = #{locationUsageType},
-        related_station_id = #{relatedStationId},
-        current_drug_id = #{currentDrugId},
-        is_empty = #{isEmpty},
-        remark = #{remark},
-        updated_time = NOW()
-    WHERE location_id = #{locationId}
-</update>
+    <update id="update" parameterType="com.seig.backend.storage.entity.StorageLocation">
+        UPDATE storage_location
+        SET
+            container_id = #{containerId},
+            location_code = #{locationCode},
+            expiry_date = #{expiryDate},
+            location_type = #{locationType},
+            max_weight = #{maxWeight},
+            dimension = #{dimension},
+            volume = #{volume},
+            drug_category_limit = #{drugCategoryLimit},
+            drug_id_limit = #{drugIdLimit},
+            status = #{status},
+            location_usage_type = #{locationUsageType},
+            related_station_id = #{relatedStationId},
+            current_drug_id = #{currentDrugId},
+            is_empty = #{isEmpty},
+            remark = #{remark},
+            updated_time = NOW()
+        WHERE location_id = #{locationId}
+    </update>
 
-<delete id="deleteById" parameterType="int">
-    DELETE FROM storage_location WHERE location_id = #{locationId}
-</delete>
+    <delete id="deleteById" parameterType="int">
+        DELETE FROM storage_location WHERE location_id = #{locationId}
+    </delete>
 
     <select id="selectEmptyLocations" resultType="int">
         SELECT location_id
-        FROM storage_locations
+        FROM storage_location
         WHERE container_id IN
         <foreach item="containerId" collection="containerIds" open="(" separator="," close=")">
             #{containerId}
         </foreach>
         AND current_drug_id IS NULL
     </select>
-<!--    <select id="selectEmptyLocations" resultType="int">-->
-<!--        SELECT location_id-->
-<!--        FROM storage_locations-->
-<!--        WHERE container_id IN-->
-<!--        <foreach item="containerId" collection="containerIds" open="(" separator="," close=")">-->
-<!--            #{containerId}-->
-<!--        </foreach>-->
-<!--        AND current_drug_id IS NULL-->
-<!--    </select>-->
+    <!--    <select id="selectEmptyLocations" resultType="int">-->
+    <!--        SELECT location_id-->
+    <!--        FROM storage_locations-->
+    <!--        WHERE container_id IN-->
+    <!--        <foreach item="containerId" collection="containerIds" open="(" separator="," close=")">-->
+    <!--            #{containerId}-->
+    <!--        </foreach>-->
+    <!--        AND current_drug_id IS NULL-->
+    <!--    </select>-->
 </mapper>

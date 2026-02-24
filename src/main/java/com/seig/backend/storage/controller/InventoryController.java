@@ -1,9 +1,12 @@
 package com.seig.backend.storage.controller;
 
 import com.seig.backend.common.Result;
+import com.seig.backend.pojo.dto.SkuInventoryRequestDto;
+import com.seig.backend.pojo.vo.InventoryLocationVo;
 import com.seig.backend.storage.entity.InventoryBatch;
 import com.seig.backend.storage.entity.InventoryDetail;
 import com.seig.backend.storage.service.InventoryService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -183,4 +186,95 @@ public class InventoryController {
             return Result.error(500, "删除库存明细时发生错误：" + e.getMessage());
         }
     }
+
+    /**
+     * 根据SKU和数量需求获取最优货位信息
+     *
+     * @param requestList SKU库存请求列表
+     * @return 最优货位信息列表
+     */
+    @PostMapping("/optimal-locations")
+    public Result<List<InventoryLocationVo>> getOptimalLocationsForSkus(
+            @Valid @RequestBody List<SkuInventoryRequestDto> requestList) {
+        try {
+            if (requestList == null || requestList.isEmpty()) {
+                return Result.error(400, "请求参数不能为空", null);
+            }
+
+            List<InventoryLocationVo> locations = inventoryService.getOptimalLocationsForSkus(requestList);
+            return Result.success("查询成功", locations);
+        } catch (Exception e) {
+            return Result.error(500, "查询最优货位时发生错误：" + e.getMessage(), null);
+        }
+    }
+
+
+    /**
+     * 根据SKU和数量需求获取最优货位信息并锁定库存
+     *
+     * @param requestList SKU库存请求列表
+     * @return 最优货位信息列表（已锁定的库存）
+     */
+    @PostMapping("/optimal-locations/lock")
+    public Result<List<InventoryLocationVo>> lockOptimalLocationsForSkus(
+            @Valid @RequestBody List<SkuInventoryRequestDto> requestList) {
+        try {
+            if (requestList == null || requestList.isEmpty()) {
+                return Result.error(400, "请求参数不能为空", null);
+            }
+
+            List<InventoryLocationVo> locations = inventoryService.lockOptimalLocationsForSkus(requestList);
+            return Result.success("库存锁定成功", locations);
+        } catch (Exception e) {
+            return Result.error(500, "锁定库存时发生错误：" + e.getMessage(), null);
+        }
+    }
+
+    /**
+     * 解锁库存
+     *
+     * @param lockedLocations 已锁定的货位信息列表
+     * @return 操作结果
+     */
+    @DeleteMapping("/locked-locations")
+    public Result<Void> unlockInventoryLocations(
+            @Valid @RequestBody List<InventoryLocationVo> lockedLocations) {
+        try {
+            if (lockedLocations == null || lockedLocations.isEmpty()) {
+                return Result.error(400, "请求参数不能为空", null);
+            }
+
+            boolean success = inventoryService.unlockInventoryLocations(lockedLocations);
+            if (success) {
+                return Result.success("库存解锁成功");
+            } else {
+                return Result.error(500, "库存解锁失败", null);
+            }
+        } catch (Exception e) {
+            return Result.error(500, "解锁库存时发生错误：" + e.getMessage(), null);
+        }
+    }
+
+//    /**
+//     * 查询最优货位信息（不锁定库存，仅查询）
+//     *
+//     * @param requestList SKU库存请求列表
+//     * @return 最优货位信息列表
+//     */
+//    @PostMapping("/optimal-locations/query")
+//    public Result<List<InventoryLocationVo>> getOptimalLocationsForSkus(
+//            @Valid @RequestBody List<SkuInventoryRequestDto> requestList) {
+//        try {
+//            if (requestList == null || requestList.isEmpty()) {
+//                return Result.error(400, "请求参数不能为空", null);
+//            }
+//
+//            List<InventoryLocationVo> locations = inventoryService.getOptimalLocationsForSkus(requestList);
+//            return Result.success("查询成功", locations);
+//        } catch (Exception e) {
+//            return Result.error(500, "查询最优货位时发生错误：" + e.getMessage(), null);
+//        }
+//    }
+
+
 }

@@ -15,6 +15,15 @@ public class MedicineSkuController {
     @Autowired
     private MedicineSkuService medicineSkuService;
 
+    @GetMapping("/getAll")
+    public Result<List<MedicineSku>> getAllMedicineSkus() {
+        try {
+            List<MedicineSku> skus = medicineSkuService.getAllMedicineSkus();
+            return Result.success("查询成功", skus);
+        } catch (Exception e) {
+            return Result.error(500, "查询SKU列表时发生错误：" + e.getMessage(), null);
+        }
+    }
     @PostMapping("/add")
     public Result<MedicineSku> createMedicineSku(@RequestBody MedicineSku medicineSku) {
         try {
@@ -43,15 +52,6 @@ public class MedicineSkuController {
         }
     }
 
-    @GetMapping("/getAll")
-    public Result<List<MedicineSku>> getAllMedicineSkus() {
-        try {
-            List<MedicineSku> skus = medicineSkuService.getAllMedicineSkus();
-            return Result.success("查询成功", skus);
-        } catch (Exception e) {
-            return Result.error(500, "查询SKU列表时发生错误：" + e.getMessage(), null);
-        }
-    }
 
     @GetMapping("/byMedicine/{medicineId}")
     public Result<List<MedicineSku>> getMedicineSkusByMedicineId(@PathVariable Integer medicineId) {
@@ -63,6 +63,66 @@ public class MedicineSkuController {
         }
     }
 
+    @GetMapping("/byGenericName")
+    public Result<List<MedicineSku>> getMedicineSkusByGenericName(@RequestParam String genericName) {
+        try {
+            List<MedicineSku> skus = medicineSkuService.getMedicineSkusByGenericName(genericName);
+            return Result.success("查询成功", skus);
+        } catch (Exception e) {
+            return Result.error(500, "查询SKU列表时发生错误：" + e.getMessage(), null);
+        }
+    }
+
+    @GetMapping("/byEnglishName")
+    public Result<List<MedicineSku>> getMedicineSkusByEnglishName(@RequestParam String englishName) {
+        try {
+            List<MedicineSku> skus = medicineSkuService.getMedicineSkusByEnglishName(englishName);
+            return Result.success("查询成功", skus);
+        } catch (Exception e) {
+            return Result.error(500, "查询SKU列表时发生错误：" + e.getMessage(), null);
+        }
+    }
+
+    @GetMapping("/byChemicalName")
+    public Result<List<MedicineSku>> getMedicineSkusByChemicalName(@RequestParam String chemicalName) {
+        try {
+            List<MedicineSku> skus = medicineSkuService.getMedicineSkusByChemicalName(chemicalName);
+            return Result.success("查询成功", skus);
+        } catch (Exception e) {
+            return Result.error(500, "查询SKU列表时发生错误：" + e.getMessage(), null);
+        }
+    }
+
+    @GetMapping("/search")
+    public Result<List<MedicineSku>> searchMedicineSkus(
+            @RequestParam(required = false) String genericName,
+            @RequestParam(required = false) String englishName,
+            @RequestParam(required = false) String chemicalName,
+            @RequestParam(required = false) String brandName) {
+        try {
+            List<MedicineSku> skus = medicineSkuService.searchMedicineSkus(genericName, englishName, chemicalName, brandName);
+            return Result.success("查询成功", skus);
+        } catch (Exception e) {
+            return Result.error(500, "查询SKU列表时发生错误：" + e.getMessage(), null);
+        }
+    }
+    /**
+     * 根据关键字统一搜索SKU
+     * 支持在generic_name、english_name、chemical_name、brand_name四个字段中进行模糊搜索
+     */
+    @GetMapping("/searchByKeyword")
+    public Result<List<MedicineSku>> searchByKeyword(@RequestParam String keyword) {
+        try {
+            if (keyword == null || keyword.trim().isEmpty()) {
+                return Result.error(400, "搜索关键字不能为空", null);
+            }
+
+            List<MedicineSku> skus = medicineSkuService.searchByKeyword(keyword.trim());
+            return Result.success("搜索成功", skus);
+        } catch (Exception e) {
+            return Result.error(500, "搜索SKU时发生错误：" + e.getMessage(), null);
+        }
+    }
     @PutMapping("/{skuId}")
     public Result<MedicineSku> updateMedicineSku(@PathVariable Integer skuId, @RequestBody MedicineSku medicineSku) {
         try {
@@ -101,5 +161,4 @@ public class MedicineSkuController {
             return Result.error(500, "查询失败：" + e.getMessage(), null);
         }
     }
-
 }

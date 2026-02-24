@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.seig.backend.product.mapper.VisitMapper">
+
+    <!-- 结果映射 -->
+    <resultMap id="VisitResultMap" type="com.seig.backend.product.entity.Visit">
+        <id column="visit_id" property="visitId"/>
+        <result column="patient_id" property="patientId"/>
+        <result column="doctor_id" property="doctorId"/>
+        <result column="visit_time" property="visitTime"/>
+        <result column="chief_complaint" property="chiefComplaint"/>
+        <result column="diagnosis" property="diagnosis"/>
+        <result column="created_at" property="createdAt"/>
+        <result column="updated_at" property="updatedAt"/>
+    </resultMap>
+
+    <!-- 插入就诊记录 -->
+    <insert id="insert" parameterType="com.seig.backend.product.entity.Visit" useGeneratedKeys="true" keyProperty="visitId">
+        INSERT INTO visits (
+            patient_id,
+            doctor_id,
+            visit_time,
+            chief_complaint,
+            diagnosis,
+            created_at,
+            updated_at
+        ) VALUES (
+                     #{patientId},
+                     #{doctorId},
+                     #{visitTime},
+                     #{chiefComplaint},
+                     #{diagnosis},
+                     #{createdAt},
+                     #{updatedAt}
+                 )
+    </insert>
+
+    <!-- 根据ID查询就诊记录 -->
+    <select id="selectById" parameterType="java.lang.Integer" resultMap="VisitResultMap">
+        SELECT * FROM visits WHERE visit_id = #{visitId}
+    </select>
+
+    <!-- 根据患者ID查询就诊记录列表 -->
+    <select id="selectByPatientId" parameterType="java.lang.Integer" resultMap="VisitResultMap">
+        SELECT * FROM visits WHERE patient_id = #{patientId} ORDER BY visit_time DESC
+    </select>
+
+    <!-- 根据医生ID查询就诊记录列表 -->
+    <select id="selectByDoctorId" parameterType="java.lang.Integer" resultMap="VisitResultMap">
+        SELECT * FROM visits WHERE doctor_id = #{doctorId} ORDER BY visit_time DESC
+    </select>
+
+    <!-- 查询所有就诊记录 -->
+    <select id="selectAll" resultMap="VisitResultMap">
+        SELECT * FROM visits ORDER BY visit_time DESC
+    </select>
+
+    <!-- 更新就诊记录信息 -->
+    <update id="update" parameterType="com.seig.backend.product.entity.Visit">
+        UPDATE visits SET
+                          patient_id = #{patientId},
+                          doctor_id = #{doctorId},
+                          visit_time = #{visitTime},
+                          chief_complaint = #{chiefComplaint},
+                          diagnosis = #{diagnosis},
+                          updated_at = #{updatedAt}
+        WHERE visit_id = #{visitId}
+    </update>
+
+    <!-- 删除就诊记录 -->
+    <delete id="deleteById" parameterType="java.lang.Integer">
+        DELETE FROM visits WHERE visit_id = #{visitId}
+    </delete>
+
+</mapper>

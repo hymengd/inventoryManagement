@@ -83,4 +83,18 @@
             updated_by = #{updatedBy}
         WHERE medicine_id = #{medicineId}
     </update>
+
+    <!-- 根据关键字搜索药品 -->
+    <select id="searchByKeyword" parameterType="java.lang.String" resultType="com.seig.backend.product.entity.Medicines">
+        SELECT * FROM medicines
+        <where>
+            <if test="keyword != null and keyword != ''">
+                (medicine_code LIKE CONCAT('%', #{keyword}, '%')
+                OR generic_name LIKE CONCAT('%', #{keyword}, '%')
+                OR english_name LIKE CONCAT('%', #{keyword}, '%')
+                OR chemical_name LIKE CONCAT('%', #{keyword}, '%'))
+            </if>
+        </where>
+        ORDER BY medicine_id DESC
+    </select>
 </mapper>

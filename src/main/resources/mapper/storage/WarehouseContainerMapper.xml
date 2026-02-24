@@ -25,7 +25,7 @@
         <result column="remark" jdbcType="VARCHAR" property="remark"/>
         <result column="created_time" jdbcType="TIMESTAMP" property="createdTime"/>
         <result column="updated_time" jdbcType="TIMESTAMP" property="updatedTime"/>
-        </resultMap>
+    </resultMap>
     <!-- 插入货架/容器 -->
     <insert id="insert" parameterType="com.seig.backend.storage.entity.WarehouseContainer" useGeneratedKeys="true" keyProperty="containerId">
         INSERT INTO warehouse_container (

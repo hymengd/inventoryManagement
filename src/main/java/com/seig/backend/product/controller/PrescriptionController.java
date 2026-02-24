@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.seig.backend.common.Result;
 import com.seig.backend.pojo.dto.PrescriptionDto;
+import com.seig.backend.pojo.dto.UpdatePrescriptionStatusDto;
 import com.seig.backend.product.entity.Prescription;
 import com.seig.backend.product.service.PrescriptionService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +39,6 @@ public class PrescriptionController {
             if (prescriptionDto.getMedicines() == null || prescriptionDto.getMedicines().isEmpty()) {
                 return Result.error(400, "药品清单不能为空");
             }
-
             // 将DTO转换为实体对象
             Prescription prescription = new Prescription();
             prescription.setPatientId(prescriptionDto.getPatientId());
@@ -48,7 +48,7 @@ public class PrescriptionController {
             // 将药品清单转换为JSON字符串
             String medicinesJson = objectMapper.writeValueAsString(prescriptionDto.getMedicines());
             prescription.setMedicines(medicinesJson);
-
+            System.out.println(medicinesJson);
             Prescription created = prescriptionService.createPrescription(prescription);
             if (created != null) {
                 return Result.success("开方成功", created);
@@ -162,5 +162,118 @@ public class PrescriptionController {
     public Result<List<Prescription>> getPrescriptionsByStatus(@PathVariable Byte status) {
         List<Prescription> prescriptions = prescriptionService.getPrescriptionsByStatus(status);
         return Result.success("查询成功", prescriptions);
+    }
+
+    /**
+     * 查询 completeTime 为空的药方记录
+     * GET /prescriptions/complete-null
+     */
+    @GetMapping("/complete-null")
+    public Result<List<Prescription>> getPrescriptionsByCompleteTimeIsNull() {
+        List<Prescription> prescriptions = prescriptionService.getPrescriptionsByCompleteTimeIsNull();
+        return Result.success("查询成功", prescriptions);
+    }
+    /**
+     * 更新药方状态
+     * PUT /prescriptions/{id}/status
+     */
+    @PutMapping("/{id}/status")
+    public Result<Prescription> updatePrescriptionStatus(@PathVariable Long id, @RequestBody UpdatePrescriptionStatusDto statusDto) {
+        try {
+            // 参数验证
+            if (statusDto.getStatus() == null) {
+                return Result.error(400, "状态不能为空");
+            }
+
+            // 验证状态值范围 (0-4)
+            if (statusDto.getStatus() < 0 || statusDto.getStatus() > 4) {
+                return Result.error(400, "状态值必须在0-4之间");
+            }
+
+            // 当状态为已锁定、发药中、已完成时，药师ID不能为空
+            if ((statusDto.getStatus() == 2 || statusDto.getStatus() == 3 || statusDto.getStatus() == 4)
+                    && statusDto.getPharmacistId() == null) {
+                return Result.error(400, "状态为已锁定、发药中或已完成时，药师ID不能为空");
+            }
+
+            Prescription prescription = prescriptionService.getPrescriptionById(id);
+            if (prescription == null) {
+                return Result.error(404, "药方不存在");
+            }
+
+            // 更新状态相关信息
+            prescription.setStatus(statusDto.getStatus());
+
+            // 根据状态设置相应的时间字段
+            switch (statusDto.getStatus()) {
+                case 2: // 已锁定
+                    prescription.setPharmacistId(statusDto.getPharmacistId());
+                    prescription.setLockTime(java.time.LocalDateTime.now());
+                    break;
+                case 3: // 发药中
+                    prescription.setPharmacistId(statusDto.getPharmacistId());
+                    // 保持原有的锁定时间
+                    break;
+                case 4: // 已完成
+                    prescription.setPharmacistId(statusDto.getPharmacistId());
+                    prescription.setCompleteTime(java.time.LocalDateTime.now());
+                    break;
+                default:
+                    // 草稿(0)和待抓药(1)状态不需要特殊处理
+                    break;
+            }
+
+            Prescription updated = prescriptionService.updatePrescription(prescription);
+            if (updated != null) {
+                return Result.success("状态更新成功", updated);
+            } else {
+                return Result.error(500, "状态更新失败");
+            }
+        } catch (Exception e) {
+            return Result.error(500, "状态更新异常: " + e.getMessage());
+        }
+    }
+
+    /**
+     * 批量更新药方状态
+     * PUT /prescriptions/batch/status
+     */
+    @PutMapping("/batch/status")
+    public Result<Void> batchUpdatePrescriptionStatus(@RequestBody List<UpdatePrescriptionStatusDto> statusDtos) {
+        try {
+            if (statusDtos == null || statusDtos.isEmpty()) {
+                return Result.error(400, "批量更新列表不能为空");
+            }
+
+            int successCount = 0;
+            int failCount = 0;
+            StringBuilder errorMsg = new StringBuilder();
+
+            for (UpdatePrescriptionStatusDto statusDto : statusDtos) {
+                try {
+                    // 复用单个更新的逻辑
+                    Result<Prescription> result = updatePrescriptionStatus(statusDto.getPrescriptionId(), statusDto);
+                    if (result.getCode() == 200) {
+                        successCount++;
+                    } else {
+                        failCount++;
+                        errorMsg.append("ID ").append(statusDto.getPrescriptionId())
+                                .append(": ").append(result.getMessage()).append("; ");
+                    }
+                } catch (Exception e) {
+                    failCount++;
+                    errorMsg.append("ID ").append(statusDto.getPrescriptionId())
+                            .append(": 异常 - ").append(e.getMessage()).append("; ");
+                }
+            }
+
+            if (failCount == 0) {
+                return Result.success("批量更新成功，共更新 " + successCount + " 条记录");
+            } else {
+                return Result.error(500, "批量更新部分失败: 成功" + successCount + "条，失败" + failCount + "条。错误详情: " + errorMsg.toString());
+            }
+        } catch (Exception e) {
+            return Result.error(500, "批量更新异常: " + e.getMessage());
+        }
     }
 }

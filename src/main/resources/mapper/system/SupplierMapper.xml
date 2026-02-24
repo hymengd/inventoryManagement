@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.seig.backend.system.mapper.SupplierMapper">
 
@@ -42,16 +42,16 @@
             created_at, updated_at, entity_type, parent_manufacturer_id
         )
         VALUES (
-            #{supplierName,jdbcType=VARCHAR}, #{contactPerson,jdbcType=VARCHAR},
-            #{contactPhone,jdbcType=VARCHAR}, #{contactEmail,jdbcType=VARCHAR},
-            #{drugBusinessLicense,jdbcType=VARCHAR}, #{gspCertificate,jdbcType=VARCHAR},
-            #{businessScope,jdbcType=VARCHAR}, #{mainDrugCategories,jdbcType=VARCHAR},
-            #{supplyCapability,jdbcType=LONGVARCHAR}, #{deliveryTime,jdbcType=INTEGER},
-            #{qualitySystem,jdbcType=VARCHAR}, #{coldChainSupport,jdbcType=BIT},
-            #{status,jdbcType=BIT}, #{createdAt,jdbcType=TIMESTAMP},
-            #{updatedAt,jdbcType=TIMESTAMP}, #{entityType,jdbcType=VARCHAR},
-            #{parentManufacturerId,jdbcType=INTEGER}
-        )
+                   #{supplierName,jdbcType=VARCHAR}, #{contactPerson,jdbcType=VARCHAR},
+                   #{contactPhone,jdbcType=VARCHAR}, #{contactEmail,jdbcType=VARCHAR},
+                   #{drugBusinessLicense,jdbcType=VARCHAR}, #{gspCertificate,jdbcType=VARCHAR},
+                   #{businessScope,jdbcType=VARCHAR}, #{mainDrugCategories,jdbcType=VARCHAR},
+                   #{supplyCapability,jdbcType=LONGVARCHAR}, #{deliveryTime,jdbcType=INTEGER},
+                   #{qualitySystem,jdbcType=VARCHAR}, #{coldChainSupport,jdbcType=BIT},
+                   #{status,jdbcType=BIT}, #{createdAt,jdbcType=TIMESTAMP},
+                   #{updatedAt,jdbcType=TIMESTAMP}, #{entityType,jdbcType=VARCHAR},
+                   #{parentManufacturerId,jdbcType=INTEGER}
+               )
     </insert>
 
     <update id="updateByPrimaryKey" parameterType="com.seig.backend.system.entity.Supplier">

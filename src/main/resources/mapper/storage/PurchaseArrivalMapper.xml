@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.seig.backend.storage.mapper.PurchaseArrivalMapper">
 
@@ -27,16 +27,16 @@
             po_id, sku_id, batch_no, arrival_qty,
             arrival_date, location_temp, status, inspector_id, inspect_date
         ) VALUES (
-            #{poId,jdbcType=INTEGER},
-            #{skuId,jdbcType=INTEGER},
-            #{batchNo,jdbcType=VARCHAR},
-            #{arrivalQty,jdbcType=INTEGER},
-            #{arrivalDate,jdbcType=DATE},
-            #{locationTemp,jdbcType=VARCHAR},
-            #{status,jdbcType=VARCHAR},
-            #{inspectorId,jdbcType=VARCHAR},
-            #{inspectDate,jdbcType=DATE}
-        )
+                     #{poId,jdbcType=INTEGER},
+                     #{skuId,jdbcType=INTEGER},
+                     #{batchNo,jdbcType=VARCHAR},
+                     #{arrivalQty,jdbcType=INTEGER},
+                     #{arrivalDate,jdbcType=DATE},
+                     #{locationTemp,jdbcType=VARCHAR},
+                     #{status,jdbcType=VARCHAR},
+                     #{inspectorId,jdbcType=VARCHAR},
+                     #{inspectDate,jdbcType=DATE}
+                 )
     </insert>
 
     <select id="selectByArrivalId" parameterType="java.lang.Integer" resultMap="BaseResultMap">

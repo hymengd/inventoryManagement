@@ -44,4 +44,22 @@ public interface PrescriptionMapper {
     /**
      * 根据状态查询药方
      */    List<Prescription> selectByStatus(Byte status);
+
+    /**
+     * 根据就诊记录ID查询药方
+     */
+    List<Prescription> selectByVisitId(Integer visitId);
+
+    /**
+     * 根据就诊记录ID删除药方
+     */
+    int deleteByVisitId(Integer visitId);
+
+
+    /**
+     * 查询 completeTime 为空的药方记录
+     */
+    List<Prescription> selectByCompleteTimeIsNull();
+
+
 }

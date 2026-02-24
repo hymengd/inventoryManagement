@@ -68,6 +68,7 @@ public class MedicinesController {
 
     @GetMapping("/selectByPrescriptionType")
     public List<Medicines> selectByPrescriptionType(int prescriptionType) {
+//        是否是处方药
         return medicinesService.selectByPrescriptionType(prescriptionType);
     }
 
@@ -117,5 +118,25 @@ public class MedicinesController {
 //            return Result.error("更新异常：" + e.getMessage());
 //        }
 //    }
+
+    /**
+     * 根据关键字搜索药品
+     * 支持在medicine_code、generic_name、english_name、chemical_name四个字段中进行模糊搜索
+     * @param keyword 搜索关键字
+     * @return 搜索结果
+     */
+    @GetMapping("/search")
+    public Result<List<Medicines>> searchByKeyword(@RequestParam String keyword) {
+        try {
+            if (keyword == null || keyword.trim().isEmpty()) {
+                return Result.error(400, "搜索关键字不能为空", null);
+            }
+
+            List<Medicines> medicines = medicinesService.searchByKeyword(keyword.trim());
+            return Result.success("搜索成功", medicines);
+        } catch (Exception e) {
+            return Result.error(500, "搜索药品时发生错误：" + e.getMessage(), null);
+        }
+    }
 
 }

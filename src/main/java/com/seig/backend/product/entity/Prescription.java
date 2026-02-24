@@ -14,22 +14,26 @@ public class Prescription {
     private Long id;
 
     /**
-     * 患者ID
+     * 患者ID，冗余
      */
     private Long patientId;
 
     /**
-     * 开方医生ID
+     * 开方医生ID，冗余
      */
     private Long doctorId;
 
     /**
-     * 病情诊断
+     * 病情诊断，冗余
      */
     private String diagnosis;
+    /**
+     * 就诊记录ID，外键关联visits表
+     */
+    private Integer visitId;
 
     /**
-     * 药品清单 [{id, name, spec, dose, qty, inventory}]
+     * 药品清单 [{skuId, brandName, spec, dosage, quantity, inventory}]
      */
     private String medicines;
 
@@ -108,6 +112,14 @@ public class Prescription {
         return medicines;
     }
 
+    public Integer getVisitId() {
+        return visitId;
+    }
+
+    public void setVisitId(Integer visitId) {
+        this.visitId = visitId;
+    }
+
     public void setMedicines(String medicines) {
         this.medicines = medicines;
     }
@@ -165,41 +177,43 @@ public class Prescription {
      * 用于解析JSON格式的药品清单
      */
     public static class MedicineItem {
-        private Long id;
-        private String name;
+        private Long skuId;
+        private String brandName;
+        private String genericName;
         private String spec;
-        private String dose;
-        private Integer qty;
+        private String dosage;
+        private Integer quantity;
         private Integer inventory;
 
         // 构造函数
         public MedicineItem() {
         }
 
-        public MedicineItem(Long id, String name, String spec, String dose, Integer qty, Integer inventory) {
-            this.id = id;
-            this.name = name;
+        public MedicineItem(Long id, String brandName, String spec, String dosage, Integer quantity, Integer inventory) {
+            this.skuId = id;
+            this.brandName = brandName;
+            this.genericName = genericName;
             this.spec = spec;
-            this.dose = dose;
-            this.qty = qty;
+            this.dosage = dosage;
+            this.quantity = quantity;
             this.inventory = inventory;
         }
 
         // Getter 和 Setter 方法
-        public Long getId() {
-            return id;
+        public Long getSkuId() {
+            return skuId;
         }
 
-        public void setId(Long id) {
-            this.id = id;
+        public void setSkuId(Long skuId) {
+            this.skuId = skuId;
         }
 
-        public String getName() {
-            return name;
+        public String getBrandName() {
+            return brandName;
         }
 
-        public void setName(String name) {
-            this.name = name;
+        public void setBrandName(String brandName) {
+            this.brandName = brandName;
         }
 
         public String getSpec() {
@@ -210,20 +224,20 @@ public class Prescription {
             this.spec = spec;
         }
 
-        public String getDose() {
-            return dose;
+        public String getDosage() {
+            return dosage;
         }
 
-        public void setDose(String dose) {
-            this.dose = dose;
+        public void setDosage(String dosage) {
+            this.dosage = dosage;
         }
 
-        public Integer getQty() {
-            return qty;
+        public Integer getQuantity() {
+            return quantity;
         }
 
-        public void setQty(Integer qty) {
-            this.qty = qty;
+        public void setQuantity(Integer quantity) {
+            this.quantity = quantity;
         }
 
         public Integer getInventory() {
@@ -237,11 +251,12 @@ public class Prescription {
         @Override
         public String toString() {
             return "MedicineItem{" +
-                    "id=" + id +
-                    ", name='" + name + '\'' +
+                    "skuId=" + skuId +
+                    ", brandName='" + brandName + '\'' +
+                    ", genericName='" + genericName + '\'' +
                     ", spec='" + spec + '\'' +
-                    ", dose='" + dose + '\'' +
-                    ", qty=" + qty +
+                    ", dosage='" + dosage + '\'' +
+                    ", quantity=" + quantity +
                     ", inventory=" + inventory +
                     '}';
         }

@@ -29,13 +29,15 @@
 
 
     <sql id="Base_Column_List">
-        detail_id, batch_id, drug_id, location_id, quantity,
+        detail_id
+        , batch_id, drug_id, location_id, quantity,
         available_quantity, locked_quantity, is_primary_location, temperature_zone, humidity_condition,
         light_condition, last_stocktake_date, last_stocktake_quantity, stocktake_difference,
         inventory_age, last_move_date, move_reason, status, created_at, updated_at, created_by, updated_by
     </sql>
 
-    <insert id="insert" parameterType="com.seig.backend.storage.entity.InventoryDetail" useGeneratedKeys="true" keyProperty="detailId">
+    <insert id="insert" parameterType="com.seig.backend.storage.entity.InventoryDetail" useGeneratedKeys="true"
+            keyProperty="detailId">
         INSERT INTO inventory_details (
         <include refid="Base_Column_List"/>
         ) VALUES (
@@ -110,7 +112,121 @@
     </update>
 
     <delete id="deleteById" parameterType="java.lang.Integer">
-        DELETE FROM inventory_details
+        DELETE
+        FROM inventory_details
         WHERE detail_id = #{detailId}
     </delete>
+    <!-- 根据skuId连接inventory_batches查询库存明细 -->
+    <select id="selectBySkuIdWithJoin" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        SELECT
+        id.
+        <include refid="Base_Column_List"/>
+        FROM inventory_details id
+        INNER JOIN inventory_batches ib ON id.batch_id = ib.batch_id
+        WHERE ib.sku_id = #{skuId}
+        ORDER BY id.detail_id DESC
+    </select>
+
+    <!-- 根据多个skuId连表查询库存明细与具体货位 -->
+    <select id="selectByMultipleSkuIdsWithJoin"
+            resultType="com.seig.backend.storage.entity.InventoryDetailWithLocation">
+        SELECT
+        id.detail_id,
+        id.batch_id,
+        id.drug_id,
+        id.location_id,
+        id.quantity,
+        id.available_quantity,
+        id.locked_quantity,
+        id.is_primary_location,
+        id.temperature_zone,
+        id.humidity_condition,
+        id.light_condition,
+        id.last_stocktake_date,
+        id.last_stocktake_quantity,
+        id.stocktake_difference,
+        id.inventory_age,
+        id.last_move_date,
+        id.move_reason,
+        id.status,
+        id.created_at,
+        id.updated_at,
+        id.created_by,
+        id.updated_by,
+        sl.location_code,
+        sl.container_id,
+        sl.expiry_date
+        FROM inventory_details id
+        INNER JOIN inventory_batches ib ON id.batch_id = ib.batch_id
+        INNER JOIN storage_location sl ON id.location_id = sl.location_id
+        WHERE ib.sku_id IN
+        <foreach collection="skuIds" item="skuId" open="(" separator="," close=")">
+            #{skuId}
+        </foreach>
+        AND id.available_quantity > 0
+        ORDER BY sl.expiry_date ASC, id.detail_id DESC
+    </select>
+    <!-- 锁定库存数量（使用数据库悲观锁确保并发安全） -->
+    <update id="lockInventoryQuantity">
+        UPDATE inventory_details
+
+        SET
+                        locked_quantity = COALESCE(locked_quantity, 0) + #{lockQuantity},            available_quantity = available_quantity - #{lockQuantity},           updated_at = NOW()
+
+        WHERE detail_id = #{detailId}
+                      AND available_quantity >= #{lockQuantity}
+                </update>
+
+        <!-- 解锁库存数量 -->
+    <update id="unlockInventoryQuantity">
+        UPDATE inventory_details
+
+        SET
+                        locked_quantity = locked_quantity - #{unlockQuantity},           available_quantity = available_quantity + #{unlockQuantity},            updated_at = NOW()
+
+        WHERE detail_id = #{detailId}
+                      AND locked_quantity >= #{unlockQuantity}
+                </update>
+
+    <!-- 查询可用库存（排除已锁定的） -->
+    <select id="selectAvailableInventoryBySkuIds"
+            resultType="com.seig.backend.storage.entity.InventoryDetailWithLocation">
+        SELECT
+        id.detail_id,
+        id.batch_id,
+        id.drug_id,
+        id.location_id,
+        id.quantity,
+        id.available_quantity,
+        id.locked_quantity,
+        id.is_primary_location,
+        id.temperature_zone,
+        id.humidity_condition,
+        id.light_condition,
+        id.last_stocktake_date,
+        id.last_stocktake_quantity,
+        id.stocktake_difference,
+        id.inventory_age,
+        id.last_move_date,
+        id.move_reason,
+        id.status,
+        id.created_at,
+        id.updated_at,
+        id.created_by,
+        id.updated_by,
+        sl.location_code,
+        sl.container_id,
+        sl.expiry_date
+        FROM inventory_details id
+        INNER JOIN inventory_batches ib ON id.batch_id = ib.batch_id
+        INNER JOIN storage_location sl ON id.location_id = sl.location_id
+        WHERE ib.sku_id IN
+        <foreach collection="skuIds" item="skuId" open="(" separator="," close=")">
+            #{skuId}
+        </foreach>
+        AND (id.available_quantity - COALESCE(id.locked_quantity, 0)) > 0
+        ORDER BY sl.expiry_date ASC, id.detail_id DESC
+    </select>
+
+
 </mapper>

@@ -35,4 +35,11 @@ public interface MedicinesMapper {
      */
     int updateMedicineFull(Medicines medicine);
 
+    /**
+     * 根据关键字搜索药品（在medicine_code、generic_name、english_name、chemical_name中搜索）
+     * @param keyword 搜索关键字
+     * @return 符合条件的药品列表
+     */
+    List<Medicines> searchByKeyword(String keyword);
+
 }

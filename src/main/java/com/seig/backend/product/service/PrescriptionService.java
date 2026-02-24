@@ -1,5 +1,6 @@
 package com.seig.backend.product.service;
 
+import com.seig.backend.pojo.dto.UpdatePrescriptionStatusDto;
 import com.seig.backend.product.entity.Prescription;
 
 import java.util.List;
@@ -45,4 +46,18 @@ public interface PrescriptionService {
      * 根据状态获取药方列表
      */
     List<Prescription> getPrescriptionsByStatus(Byte status);
+
+
+    List<Prescription> getPrescriptionsByVisitId(Integer visitId);
+
+    boolean deletePrescriptionsByVisitId(Integer visitId);
+    List<Prescription> getPrescriptionsByCompleteTimeIsNull();
+
+
+    /**
+     * 批量更新药方状态
+     */
+    boolean batchUpdatePrescriptionStatus(List<UpdatePrescriptionStatusDto> statusDtos);
+
+
 }
